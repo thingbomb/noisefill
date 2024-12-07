@@ -1,16 +1,6 @@
 import { useEffect, useState } from "react";
 import { Button } from "../components/ui/button";
 import {
-  AlertDialog,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "../components/ui/alert";
-import {
   Dialog,
   DialogContent,
   DialogDescription,
@@ -22,132 +12,14 @@ import {
 import { Label } from "../components/ui/label";
 import { Input } from "../components/ui/input";
 import { Analytics } from "@vercel/analytics/react";
+import {
+  soundscapes,
+  savePlaylist,
+  getPlaylists,
+  deletePlaylist,
+} from "../soundscapes";
 
 let timer;
-
-let soundscapes = [
-  {
-    name: "Ocean",
-    emoji: "🌊",
-    url: "https://utfs.io/f/VU8He2t54NdYu8EVsK5tgWb3e9PanFUMzSxQm0HhV1XofujB",
-    volume: 1,
-    attribution: [
-      "Seawash (calm)  by craiggroshek -- https://freesound.org/s/176617/ -- License: Creative Commons 0",
-    ],
-    image: "https://utfs.io/f/VU8He2t54NdYnavqSh6Uydx5HzbJtTENYqUwVaPOXZCnAiK2",
-    index: 0,
-  },
-  {
-    name: "Forest",
-    emoji: "🌴",
-    url: "https://utfs.io/f/VU8He2t54NdYuNACgha5tgWb3e9PanFUMzSxQm0HhV1Xofuj",
-    volume: 1,
-    attribution: [
-      "Birds In Spring (Scotland) by BurghRecords -- https://freesound.org/s/463903/ -- License: Creative Commons 0",
-    ],
-    image: "https://utfs.io/f/VU8He2t54NdYpgBC9am76CiVAS4EwQty3arMPfHR1bxgdkZD",
-    index: 1,
-  },
-  {
-    name: "Rain",
-    emoji: "💦",
-    url: "https://utfs.io/f/VU8He2t54NdY9vI0WdS2OVPpzlUIsm50S3eRo4JLb68vxBYA",
-    volume: 1,
-    attribution: [
-      "Rain.wav by idomusics -- https://freesound.org/s/518863/ -- License: Creative Commons 0",
-    ],
-    image: "https://utfs.io/f/VU8He2t54NdYObTBgr45tUV7W1K4ESdzvZfN8Pr2yCwGuTiB",
-    index: 2,
-  },
-  {
-    name: "River",
-    emoji: "🪨",
-    url: "https://utfs.io/f/VU8He2t54NdYd9CJeYhMOCr41owzn9sPYh5cNKJQFBEtaWu0",
-    volume: 0.8,
-    attribution: [
-      "river small brook stream with rolling splashy good detail.flac by kyles -- https://freesound.org/s/454155/ -- License: Creative Commons 0",
-    ],
-    image: "https://utfs.io/f/VU8He2t54NdYK6sDVKYu2OlbUPXGzdjtJ5iT6AaRH0yZuqD8",
-    index: 3,
-  },
-  {
-    name: "Wind",
-    emoji: "💨",
-    url: "https://utfs.io/f/VU8He2t54NdYhES01SIQ6Taob8Wf0SXDOuUA1VKkE9IHx4qd",
-    volume: 1,
-    attribution: [
-      "wind.ogg by sleepCircle -- https://freesound.org/s/22331/ -- License: Creative Commons 0",
-    ],
-    image: "https://utfs.io/f/VU8He2t54NdYvQshHTaHAWjPnCZrtxmV56SkaM3oO0qw4huf",
-    index: 4,
-  },
-  {
-    name: "Fire",
-    emoji: "🔥",
-    url: "https://utfs.io/f/VU8He2t54NdYGNe8h39BnItq9LXQlVPu4jNzU1xdaYCM0pF8",
-    volume: 1,
-    attribution: [
-      "Bonfire by forfie -- https://freesound.org/s/364992/ -- License: Creative Commons 0",
-    ],
-    image: "https://utfs.io/f/VU8He2t54NdYpRQh5Mcm76CiVAS4EwQty3arMPfHR1bxgdkZ",
-    index: 5,
-  },
-  {
-    name: "Desert",
-    emoji: "🌵",
-    url: "https://utfs.io/f/VU8He2t54NdYHpvbBvYhmu5O2LJfYdtvzgw0s3nbQXlkZDFS",
-    volume: 1,
-    attribution: [
-      "Desert Simple.wav by Proxima4 -- https://freesound.org/s/104320/ -- License: Creative Commons 0",
-    ],
-    image: "https://utfs.io/f/VU8He2t54NdYOYYMxdZ45tUV7W1K4ESdzvZfN8Pr2yCwGuTi",
-    index: 6,
-  },
-  {
-    name: "Arctic",
-    emoji: "❄️",
-    url: "https://utfs.io/f/VU8He2t54NdY6fCCfMVNjR9Nmtg7h50VGWKc8AQoryMUblvI",
-    volume: 0.6,
-    image: "https://utfs.io/f/VU8He2t54NdYxIBXaQ0DONIyCht8a6ZwdKgqEQSTLR51sMYB",
-    attribution: [
-      "Wind__Artic__Cold.wav by cobratronik -- https://freesound.org/s/117136/ -- License: Creative Commons 0",
-    ],
-    index: 7,
-  },
-  {
-    name: "Kettle",
-    emoji: "☕️",
-    url: "https://utfs.io/f/VU8He2t54NdY59NfzQ6fcCLQl6pk53zFgINtnv9PqHDjbRJy",
-    volume: 1,
-    image: "https://utfs.io/f/VU8He2t54NdYH7NV0ddYhmu5O2LJfYdtvzgw0s3nbQXlkZDF",
-    attribution: [
-      "water boil.wav by fryzu82 -- https://freesound.org/s/142333/ -- License: Creative Commons 0",
-    ],
-    index: 8,
-  },
-  {
-    name: "Crickets",
-    emoji: "🦗",
-    url: "https://utfs.io/f/VU8He2t54NdYOGnYUk45tUV7W1K4ESdzvZfN8Pr2yCwGuTiB",
-    volume: 0.2,
-    image: "https://utfs.io/f/VU8He2t54NdYDAOUVo88fqOGlaboRgjxshLUcB5MT4ZS2iE1",
-    attribution: [
-      "crickets by FreethinkerAnon -- https://freesound.org/s/129678/ -- License: Creative Commons 0",
-    ],
-    index: 9,
-  },
-  {
-    name: "Underwater",
-    emoji: "🐠",
-    url: "https://utfs.io/f/VU8He2t54NdYrTIK1A7PtLG5Y82xDew0Ncpqo6IhCjBQRZOn",
-    volume: 0.6,
-    image: "https://utfs.io/f/VU8He2t54NdYI934tMkGS15s7ymktfMgw0zeF4dO2HlKZXbu",
-    attribution: [
-      "Underwater Ambience by Fission9 -- https://freesound.org/s/504641/ -- License: Creative Commons 0",
-    ],
-    index: 10,
-  },
-];
 
 function SleepTimer() {
   const [duration, setDuration] = useState(0);
@@ -263,35 +135,9 @@ function SleepTimer() {
 
 function CreditsMenu() {
   return (
-    <AlertDialog>
-      <AlertDialogTrigger asChild>
-        <Button variant="outline">📝 Credits</Button>
-      </AlertDialogTrigger>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Credits</AlertDialogTitle>
-          <AlertDialogDescription>
-            {soundscapes.map((sound, index) => (
-              <div key={index}>
-                <b>
-                  {sound.emoji} {sound.name}
-                </b>
-                <br />
-                {sound.attribution.map((attribution, index) => (
-                  <div key={index}>
-                    {attribution}
-                    <br />
-                  </div>
-                ))}
-              </div>
-            ))}
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel>Close</AlertDialogCancel>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+    <a href="/credits">
+      <Button variant="outline">📝 Credits</Button>
+    </a>
   );
 }
 
@@ -299,6 +145,17 @@ function Home() {
   const [currentURL, setCurrentURL] = useState(null);
   const [playing, setPlaying] = useState(false);
   const [message, setMessage] = useState("");
+  const [selectedSoundscapes, setSelectedSoundscapes] = useState([]);
+  const [playlists, setPlaylists] = useState([]);
+  const [showPlaylistDialog, setShowPlaylistDialog] = useState(false);
+  const [playlistName, setPlaylistName] = useState("");
+  const [playlistDescription, setPlaylistDescription] = useState("");
+  const [playlistItems, setPlaylistItems] = useState([]);
+  const [currentPlaylist, setCurrentPlaylist] = useState(null);
+  const [currentPlaylistIndex, setCurrentPlaylistIndex] = useState(0);
+  const [playlistTimer, setPlaylistTimer] = useState(null);
+  const [editingPlaylist, setEditingPlaylist] = useState(null);
+
   useEffect(() => {
     if (window.location.hostname === "/") {
       document.title = "Noisefill";
@@ -380,7 +237,83 @@ function Home() {
       setMessage("(playing)");
     });
   }, []);
-  function playSound(url, volume, name, image, index) {
+
+  useEffect(() => {
+    setPlaylists(getPlaylists());
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (playlistTimer) {
+        clearTimeout(playlistTimer);
+      }
+    };
+  }, [playlistTimer]);
+
+  const handleAddToPlaylist = (soundscape) => {
+    if (
+      playlistItems.some((item) => item.soundscapeIndex === soundscape.index)
+    ) {
+      return;
+    }
+    setPlaylistItems([
+      ...playlistItems,
+      { soundscapeIndex: soundscape.index, duration: 5 },
+    ]);
+  };
+
+  const handleUpdateDuration = (index, duration) => {
+    const newItems = [...playlistItems];
+    newItems[index].duration = parseInt(duration) || 0;
+    setPlaylistItems(newItems);
+  };
+
+  const handleRemoveFromPlaylist = (index) => {
+    setPlaylistItems(playlistItems.filter((_, i) => i !== index));
+  };
+
+  const handleEditPlaylist = (playlist) => {
+    setEditingPlaylist(playlist);
+    setPlaylistName(playlist.name);
+    setPlaylistDescription(playlist.description);
+    setPlaylistItems(playlist.items);
+    setShowPlaylistDialog(true);
+  };
+
+  const handleSavePlaylist = () => {
+    if (!playlistName.trim()) {
+      alert("Please enter a playlist name");
+      return;
+    }
+
+    if (playlistItems.length === 0) {
+      alert("Please add at least one soundscape to the playlist");
+      return;
+    }
+
+    const newPlaylist = savePlaylist(
+      playlistName,
+      playlistDescription,
+      playlistItems,
+      editingPlaylist?.id
+    );
+    setPlaylists(getPlaylists());
+    setShowPlaylistDialog(false);
+    setPlaylistName("");
+    setPlaylistDescription("");
+    setPlaylistItems([]);
+    setEditingPlaylist(null);
+  };
+
+  const handleCloseDialog = () => {
+    setShowPlaylistDialog(false);
+    setPlaylistName("");
+    setPlaylistDescription("");
+    setPlaylistItems([]);
+    setEditingPlaylist(null);
+  };
+
+  const playSound = (url, volume, name, image, index) => {
     const audio = document.getElementById("player");
     if (audio.src === url && playing) {
       audio.pause();
@@ -394,30 +327,378 @@ function Home() {
       setCurrentURL(url);
       audio.play();
     }
-  }
+  };
+
+  const playPlaylist = (playlist) => {
+    setCurrentPlaylist(playlist);
+    setCurrentPlaylistIndex(0);
+    playPlaylistItem(playlist, 0);
+  };
+
+  const playPlaylistItem = (playlist, index) => {
+    if (index >= playlist.items.length) {
+      playPlaylistItem(playlist, 0);
+      return;
+    }
+
+    const item = playlist.items[index];
+    const soundscape = soundscapes[item.soundscapeIndex];
+
+    const audio = document.getElementById("player");
+    audio.src = soundscape.url;
+    audio.volume = soundscape.volume;
+    setCurrentURL(soundscape.url);
+    setPlaying(true);
+    audio.play();
+
+    setMessage(
+      `Playing playlist: ${playlist.name} - ${soundscape.name} (${item.duration} minutes)`
+    );
+
+    const timer = setTimeout(() => {
+      playPlaylistItem(playlist, index + 1);
+    }, item.duration * 60 * 1000);
+
+    setPlaylistTimer(timer);
+    setCurrentPlaylistIndex(index);
+  };
+
+  const stopPlaylist = () => {
+    if (playlistTimer) {
+      clearTimeout(playlistTimer);
+    }
+    setCurrentPlaylist(null);
+    setCurrentPlaylistIndex(0);
+    setPlaylistTimer(null);
+
+    const audio = document.getElementById("player");
+    audio.pause();
+    setPlaying(false);
+    setMessage("");
+  };
+
   return (
-    <div className="px-6 flex gap-3 flex-wrap">
+    <div>
       <audio id="player" loop></audio>
-      {soundscapes.map((sound, index) => (
-        <Button
-          variant="outline"
-          key={index}
-          onClick={() => {
-            playSound(
-              sound.url,
-              sound.volume,
-              sound.name,
-              sound.image,
-              sound.index
+      <h1 className="text-3xl font-bold">Relax</h1>
+      <p className="mb-4 text-lg">Relax with some noise</p>
+      <div className="flex flex-wrap gap-2">
+        {soundscapes.map((sound, index) => {
+          if (sound.categories.includes("relax")) {
+            return (
+              <Button
+                variant="outline"
+                key={index}
+                onClick={() => {
+                  playSound(
+                    sound.url,
+                    sound.volume,
+                    sound.name,
+                    sound.image,
+                    sound.index
+                  );
+                }}
+              >
+                {sound.emoji} {sound.name}{" "}
+                {playing ? (sound.url == currentURL ? message : "") : ""}
+              </Button>
             );
-          }}
-        >
-          {sound.emoji} {sound.name}{" "}
-          {playing ? (sound.url == currentURL ? message : "") : ""}
-        </Button>
-      ))}
-      <SleepTimer />
-      <CreditsMenu />
+          }
+        })}
+      </div>
+      <br />
+      <h1 className="text-3xl font-bold">Focus</h1>
+      <p className="mb-4 text-lg">Soundscapes for focus</p>
+      <div className="flex flex-wrap gap-2">
+        {soundscapes.map((sound, index) => {
+          if (sound.categories.includes("focus")) {
+            return (
+              <Button
+                variant="outline"
+                key={index}
+                onClick={() => {
+                  playSound(
+                    sound.url,
+                    sound.volume,
+                    sound.name,
+                    sound.image,
+                    sound.index
+                  );
+                }}
+              >
+                {sound.emoji} {sound.name}{" "}
+                {playing ? (sound.url == currentURL ? message : "") : ""}
+              </Button>
+            );
+          }
+        })}
+      </div>
+      <br />
+      <h1 className="text-3xl font-bold">Nature</h1>
+      <p className="mb-4 text-lg">Listen to some nature soundscapes</p>
+      <div className="flex flex-wrap gap-2">
+        {soundscapes.map((sound, index) => {
+          if (sound.categories.includes("nature")) {
+            return (
+              <Button
+                variant="outline"
+                key={index}
+                onClick={() => {
+                  playSound(
+                    sound.url,
+                    sound.volume,
+                    sound.name,
+                    sound.image,
+                    sound.index
+                  );
+                }}
+              >
+                {sound.emoji} {sound.name}{" "}
+                {playing ? (sound.url == currentURL ? message : "") : ""}
+              </Button>
+            );
+          }
+        })}
+      </div>
+      <br />
+      <h1 className="text-3xl font-bold">Ambience</h1>
+      <p className="mb-4 text-lg">Light, ambient soundscapes</p>
+      <div className="flex flex-wrap gap-2">
+        {soundscapes.map((sound, index) => {
+          if (sound.categories.includes("ambience")) {
+            return (
+              <Button
+                variant="outline"
+                key={index}
+                onClick={() => {
+                  playSound(
+                    sound.url,
+                    sound.volume,
+                    sound.name,
+                    sound.image,
+                    sound.index
+                  );
+                }}
+              >
+                {sound.emoji} {sound.name}{" "}
+                {playing ? (sound.url == currentURL ? message : "") : ""}
+              </Button>
+            );
+          }
+        })}
+      </div>
+      <br />
+      <h1 className="text-3xl font-bold">Sleep</h1>
+      <p className="mb-4 text-lg">
+        The lightest soundscapes optimized for sleep
+      </p>
+      <div className="flex flex-wrap gap-2">
+        {soundscapes.map((sound, index) => {
+          if (sound.categories.includes("sleep")) {
+            return (
+              <Button
+                variant="outline"
+                key={index}
+                onClick={() => {
+                  playSound(
+                    sound.url,
+                    sound.volume,
+                    sound.name,
+                    sound.image,
+                    sound.index
+                  );
+                }}
+              >
+                {sound.emoji} {sound.name}{" "}
+                {playing ? (sound.url == currentURL ? message : "") : ""}
+              </Button>
+            );
+          }
+        })}
+      </div>
+      <br />
+      <div className="flex flex-col gap-2">
+        <div className="flex justify-between items-center">
+          <h1 className="text-3xl font-bold">Playlists</h1>
+          <Button onClick={() => setShowPlaylistDialog(true)}>
+            Create Playlist
+          </Button>
+        </div>
+
+        <Dialog open={showPlaylistDialog} onOpenChange={handleCloseDialog}>
+          <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>
+                {editingPlaylist ? "Edit Playlist" : "Create New Playlist"}
+              </DialogTitle>
+              <DialogDescription>
+                {editingPlaylist
+                  ? "Edit your playlist settings and soundscapes."
+                  : "Create a custom playlist of soundscapes with specific durations."}
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="grid gap-4 py-4">
+              <div className="grid gap-2">
+                <Label htmlFor="name">Playlist Name</Label>
+                <Input
+                  id="name"
+                  value={playlistName}
+                  onChange={(e) => setPlaylistName(e.target.value)}
+                  placeholder="My Relaxation Mix"
+                />
+              </div>
+
+              <div className="grid gap-2">
+                <Label htmlFor="description">Description</Label>
+                <Input
+                  id="description"
+                  value={playlistDescription}
+                  onChange={(e) => setPlaylistDescription(e.target.value)}
+                  placeholder="A calming mix of nature sounds"
+                />
+              </div>
+
+              <div className="grid gap-2">
+                <Label>Available Soundscapes</Label>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                  {soundscapes.map((soundscape) => (
+                    <Button
+                      key={soundscape.index}
+                      variant={
+                        playlistItems.some(
+                          (item) => item.soundscapeIndex === soundscape.index
+                        )
+                          ? "secondary"
+                          : "outline"
+                      }
+                      onClick={() => handleAddToPlaylist(soundscape)}
+                      className="flex items-center gap-2"
+                    >
+                      <span>{soundscape.emoji}</span>
+                      <span>{soundscape.name}</span>
+                    </Button>
+                  ))}
+                </div>
+              </div>
+
+              {playlistItems.length > 0 && (
+                <div className="grid gap-2">
+                  <Label>Selected Soundscapes</Label>
+                  <div className="space-y-2">
+                    {playlistItems.map((item, index) => (
+                      <div
+                        key={index}
+                        className="flex items-center gap-2 p-2 border rounded"
+                      >
+                        <span className="flex items-center gap-1">
+                          <span>{soundscapes[item.soundscapeIndex].emoji}</span>
+                          <span>{soundscapes[item.soundscapeIndex].name}</span>
+                        </span>
+                        <Input
+                          type="number"
+                          min="1"
+                          value={item.duration}
+                          onChange={(e) =>
+                            handleUpdateDuration(index, e.target.value)
+                          }
+                          className="w-20"
+                        />
+                        <span>minutes</span>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleRemoveFromPlaylist(index)}
+                          className="ml-auto"
+                        >
+                          Remove
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <DialogFooter>
+              <Button onClick={handleSavePlaylist}>
+                {editingPlaylist ? "Save Changes" : "Save Playlist"}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        {playlists.length > 0 && (
+          <div className="mt-4">
+            <h3 className="text-xl font-bold mb-2">Your Playlists</h3>
+            <div className="grid gap-4">
+              {playlists.map((playlist, index) => (
+                <div key={index} className="border p-4 rounded-lg">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <h4 className="font-bold">{playlist.name}</h4>
+                      <p className="text-sm text-gray-600">
+                        {playlist.description}
+                      </p>
+                    </div>
+                    <div className="flex gap-2">
+                      {currentPlaylist?.name === playlist.name ? (
+                        <Button onClick={stopPlaylist} variant="destructive">
+                          Stop Playlist
+                        </Button>
+                      ) : (
+                        <>
+                          <Button
+                            onClick={() => handleEditPlaylist(playlist)}
+                            variant="outline"
+                          >
+                            Edit
+                          </Button>
+                          <Button onClick={() => playPlaylist(playlist)}>
+                            Play Playlist
+                          </Button>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                  <div className="mt-2 space-y-1">
+                    {playlist.items.map((item, itemIndex) => (
+                      <div
+                        key={itemIndex}
+                        className={`text-sm flex items-center gap-1 p-1 rounded ${
+                          currentPlaylist?.name === playlist.name &&
+                          currentPlaylistIndex === itemIndex
+                            ? "bg-gray-900"
+                            : ""
+                        }`}
+                      >
+                        <span>{soundscapes[item.soundscapeIndex].emoji}</span>
+                        <span>{soundscapes[item.soundscapeIndex].name}</span>
+                        <span className="text-gray-500">
+                          - {item.duration} minutes
+                        </span>
+                        {currentPlaylist?.name === playlist.name &&
+                          currentPlaylistIndex === itemIndex && (
+                            <span className="ml-2 text-blue-500">
+                              ▶ Playing
+                            </span>
+                          )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+        <br />
+        <h1 className="text-3xl font-bold">More</h1>
+        <div className="flex flex-wrap gap-2">
+          <SleepTimer />
+          <CreditsMenu />
+        </div>
+        <br />
+      </div>
       <Analytics />
     </div>
   );

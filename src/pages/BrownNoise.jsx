@@ -59,7 +59,7 @@ function BrownNoise() {
   }, []);
 
   return (
-    <div className="brown-noise-player px-6">
+    <div className="brown-noise-player">
       <div className="controls">
         <span className="mr-4">Brown Noise</span>
         {!isPlaying ? (

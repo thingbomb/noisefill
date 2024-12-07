@@ -105,7 +105,7 @@ function PodcastsView() {
     }
   }
   return (
-    <div className="mx-6">
+    <div>
       {podcastData ? (
         <div>
           <div className="grid grid-cols-[15%,85%]">

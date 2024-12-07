@@ -66,7 +66,7 @@ function PinkNoise() {
   }, []);
 
   return (
-    <div className="pink-noise-player px-6">
+    <div className="pink-noise-player">
       <div className="controls">
         <span className="mr-4">Pink Noise</span>
         {!isPlaying ? (

@@ -176,19 +176,12 @@ export default function Embed() {
             }
             className="select-none cursor-pointer"
           >
-            <b>{sound.name}</b>
-            <br />
-            {sound.attribution.map((attribution, index) => (
-              <div key={index} className="text-sm text-gray-300">
-                {attribution}
-                <br />
-              </div>
-            ))}
+            <b>{sound.emoji} {sound.name}</b>
           </li>
         ))}
       </ul>
       <br />
-      <a href="https://noisefill.com/">From Noisefill</a>
+      <a href="https://noisefill.com/credits">View Sound Credits</a> | <a href="https://noisefill.com/">From Noisefill</a>
     </div>
   );
 }

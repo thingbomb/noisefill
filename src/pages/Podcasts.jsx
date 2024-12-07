@@ -86,7 +86,7 @@ export default function Podcasts() {
   }
 
   return (
-    <div className="mx-6">
+    <div>
       <h1 className="text-2xl font-bold">Your library</h1>
       <ul>
         {podcastData.map((podcast, index) => (

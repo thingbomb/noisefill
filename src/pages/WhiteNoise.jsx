@@ -64,7 +64,7 @@ function WhiteNoise() {
   }, []);
 
   return (
-    <div className="white-noise-player px-6">
+    <div className="white-noise-player">
       <div className="controls">
         <span className="mr-4">White Noise</span>
         {!isPlaying ? (
