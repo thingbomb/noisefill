@@ -165,6 +165,18 @@ let soundscapes = [
     index: 12,
     categories: ["focus", "chill", "relax"],
   },
+  {
+    name: "Chill lofi",
+    emoji: "🌌",
+    url: "https://utfs.io/f/VU8He2t54NdYFwWRLZn976miCUOgPKZV5akqTMfu2ondGzWH",
+    volume: 1,
+    image: "https://utfs.io/f/VU8He2t54NdYrTIK1A7PtLG5Y82xDew0Ncpqo6IhCjBQRZOn",
+    attribution: [
+      "Lofi Chill by Seth_Makes_Sounds -- https://freesound.org/s/659278/ -- License: Creative Commons 0",
+    ],
+    index: 13,
+    categories: ["focus", "chill", "relax"],
+  },
 ];
 
 export const savePlaylist = (name, description, items, existingId = null) => {
