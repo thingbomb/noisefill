@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Button } from "../components/ui/button";
 import {
   Dialog,
@@ -156,18 +156,22 @@ function Home() {
   const [playlistTimer, setPlaylistTimer] = useState(null);
   const [editingPlaylist, setEditingPlaylist] = useState(null);
 
+  // Simple reference to the audio element
+  const audioRef = useRef(null);
+
   useEffect(() => {
     if (window.location.hostname === "/") {
       document.title = "Noisefill";
     }
     const audio = document.getElementById("player");
+    audioRef.current = audio;
     audio.addEventListener("pause", () => {
       setPlaying(false);
       setMessage("");
     });
     audio.addEventListener("play", () => {
       setPlaying(true);
-      if (document.getElementById("player").currentTime < 1) {
+      if (audioRef.current.currentTime < 1) {
         setMessage("(loading)");
       } else {
         setMessage("(playing)");
@@ -313,18 +317,38 @@ function Home() {
     setEditingPlaylist(null);
   };
 
+  // Simple function to set the volume based on the soundscape setting
+  const setAudioVolume = (soundscape) => {
+    if (!audioRef.current || !soundscape) return;
+
+    // Use the volume setting directly from the soundscape object
+    audioRef.current.volume = soundscape.volume || 1.0;
+  };
+
   const playSound = (url, volume, name, image, index) => {
-    const audio = document.getElementById("player");
+    const audio = audioRef.current || document.getElementById("player");
     if (audio.src === url && playing) {
       audio.pause();
       return;
     } else {
+      // Set up new audio source
       audio.src = url;
-      audio.volume = volume;
       audio.title = name;
       audio.setAttribute("image", image);
       audio.setAttribute("index", index);
       setCurrentURL(url);
+
+      // Find the corresponding soundscape to get the volume
+      const soundscape = soundscapes.find((s) => s.url === url);
+      if (soundscape) {
+        // Set volume directly from the soundscape
+        audio.volume = soundscape.volume || 1.0;
+      } else {
+        // Fallback volume
+        audio.volume = volume || 1.0;
+      }
+
+      // Play the audio
       audio.play();
     }
   };
@@ -344,23 +368,33 @@ function Home() {
     const item = playlist.items[index];
     const soundscape = soundscapes[item.soundscapeIndex];
 
-    const audio = document.getElementById("player");
+    const audio = audioRef.current || document.getElementById("player");
     audio.src = soundscape.url;
-    audio.volume = soundscape.volume;
+    // Set volume directly from soundscape
+    audio.volume = soundscape.volume || 1.0;
     setCurrentURL(soundscape.url);
     setPlaying(true);
+
+    // Play the audio
     audio.play();
 
+    // Set message
     setMessage(
       `Playing playlist: ${playlist.name} - ${soundscape.name} (${item.duration} minutes)`
     );
 
+    // Set up playlist state
+    setCurrentPlaylist(playlist);
+    setCurrentPlaylistIndex(index);
+
+    // Set timer for next track
+    const minutes = parseInt(item.duration);
+    clearTimeout(playlistTimer);
     const timer = setTimeout(() => {
       playPlaylistItem(playlist, index + 1);
-    }, item.duration * 60 * 1000);
+    }, minutes * 60 * 1000);
 
     setPlaylistTimer(timer);
-    setCurrentPlaylistIndex(index);
   };
 
   const stopPlaylist = () => {
@@ -371,156 +405,48 @@ function Home() {
     setCurrentPlaylistIndex(0);
     setPlaylistTimer(null);
 
-    const audio = document.getElementById("player");
+    const audio = audioRef.current || document.getElementById("player");
     audio.pause();
     setPlaying(false);
     setMessage("");
   };
 
   return (
-    <div>
-      <audio id="player" loop></audio>
-      <h1 className="text-3xl font-bold">Relax</h1>
-      <p className="mb-4 text-lg">Relax with some noise</p>
+    <div className="overflow-y-auto">
+      <audio id="player" ref={audioRef} loop></audio>
+
+      {/* All Soundscapes */}
       <div className="flex flex-wrap gap-2">
-        {soundscapes.map((sound, index) => {
-          if (sound.categories.includes("relax")) {
-            return (
-              <Button
-                variant="outline"
-                key={index}
-                onClick={() => {
-                  playSound(
-                    sound.url,
-                    sound.volume,
-                    sound.name,
-                    sound.image,
-                    sound.index
-                  );
-                }}
-              >
-                {sound.emoji} {sound.name}{" "}
-                {playing ? (sound.url == currentURL ? message : "") : ""}
-              </Button>
-            );
-          }
-        })}
-      </div>
-      <br />
-      <h1 className="text-3xl font-bold">Focus</h1>
-      <p className="mb-4 text-lg">Soundscapes for focus</p>
-      <div className="flex flex-wrap gap-2">
-        {soundscapes.map((sound, index) => {
-          if (sound.categories.includes("focus")) {
-            return (
-              <Button
-                variant="outline"
-                key={index}
-                onClick={() => {
-                  playSound(
-                    sound.url,
-                    sound.volume,
-                    sound.name,
-                    sound.image,
-                    sound.index
-                  );
-                }}
-              >
-                {sound.emoji} {sound.name}{" "}
-                {playing ? (sound.url == currentURL ? message : "") : ""}
-              </Button>
-            );
-          }
-        })}
-      </div>
-      <br />
-      <h1 className="text-3xl font-bold">Nature</h1>
-      <p className="mb-4 text-lg">Listen to some nature soundscapes</p>
-      <div className="flex flex-wrap gap-2">
-        {soundscapes.map((sound, index) => {
-          if (sound.categories.includes("nature")) {
-            return (
-              <Button
-                variant="outline"
-                key={index}
-                onClick={() => {
-                  playSound(
-                    sound.url,
-                    sound.volume,
-                    sound.name,
-                    sound.image,
-                    sound.index
-                  );
-                }}
-              >
-                {sound.emoji} {sound.name}{" "}
-                {playing ? (sound.url == currentURL ? message : "") : ""}
-              </Button>
-            );
-          }
-        })}
-      </div>
-      <br />
-      <h1 className="text-3xl font-bold">Ambience</h1>
-      <p className="mb-4 text-lg">Light, ambient soundscapes</p>
-      <div className="flex flex-wrap gap-2">
-        {soundscapes.map((sound, index) => {
-          if (sound.categories.includes("ambience")) {
-            return (
-              <Button
-                variant="outline"
-                key={index}
-                onClick={() => {
-                  playSound(
-                    sound.url,
-                    sound.volume,
-                    sound.name,
-                    sound.image,
-                    sound.index
-                  );
-                }}
-              >
-                {sound.emoji} {sound.name}{" "}
-                {playing ? (sound.url == currentURL ? message : "") : ""}
-              </Button>
-            );
-          }
-        })}
-      </div>
-      <br />
-      <h1 className="text-3xl font-bold">Sleep</h1>
-      <p className="mb-4 text-lg">
-        The lightest soundscapes optimized for sleep
-      </p>
-      <div className="flex flex-wrap gap-2">
-        {soundscapes.map((sound, index) => {
-          if (sound.categories.includes("sleep")) {
-            return (
-              <Button
-                variant="outline"
-                key={index}
-                onClick={() => {
-                  playSound(
-                    sound.url,
-                    sound.volume,
-                    sound.name,
-                    sound.image,
-                    sound.index
-                  );
-                }}
-              >
-                {sound.emoji} {sound.name}{" "}
-                {playing ? (sound.url == currentURL ? message : "") : ""}
-              </Button>
-            );
-          }
-        })}
+        <CreditsMenu />
+        {soundscapes.map((sound, index) => (
+          <Button
+            variant="outline"
+            key={index}
+            onClick={() => {
+              playSound(
+                sound.url,
+                sound.volume,
+                sound.name,
+                sound.image,
+                sound.index
+              );
+            }}
+          >
+            {sound.emoji} {sound.name}{" "}
+            {playing ? (sound.url == currentURL ? message : "") : ""}
+          </Button>
+        ))}
+        <SleepTimer />
       </div>
       <br />
       <div className="flex flex-col gap-2">
         <div className="flex justify-between items-center">
-          <h1 className="text-3xl font-bold">Playlists</h1>
-          <Button onClick={() => setShowPlaylistDialog(true)}>
+          <h1 className="text-xl font-semibold">Playlists</h1>
+          <Button
+            className="py-1 h-9"
+            variant="outline"
+            onClick={() => setShowPlaylistDialog(true)}
+          >
             Create Playlist
           </Button>
         </div>
@@ -629,15 +555,17 @@ function Home() {
         </Dialog>
 
         {playlists.length > 0 && (
-          <div className="mt-4">
-            <h3 className="text-xl font-bold mb-2">Your Playlists</h3>
+          <div>
             <div className="grid gap-4">
               {playlists.map((playlist, index) => (
-                <div key={index} className="border p-4 rounded-lg">
+                <div
+                  key={index}
+                  className="border p-4 rounded-lg bg-background border-input"
+                >
                   <div className="flex justify-between items-start">
                     <div>
-                      <h4 className="font-bold">{playlist.name}</h4>
-                      <p className="text-sm text-gray-600">
+                      <h4 className="font-semibold text-lg">{playlist.name}</h4>
+                      <p className="text-[14.5px] text-zinc-400">
                         {playlist.description}
                       </p>
                     </div>
@@ -651,10 +579,14 @@ function Home() {
                           <Button
                             onClick={() => handleEditPlaylist(playlist)}
                             variant="outline"
+                            className="h-9"
                           >
                             Edit
                           </Button>
-                          <Button onClick={() => playPlaylist(playlist)}>
+                          <Button
+                            onClick={() => playPlaylist(playlist)}
+                            className="h-9"
+                          >
                             Play Playlist
                           </Button>
                         </>
@@ -674,7 +606,7 @@ function Home() {
                       >
                         <span>{soundscapes[item.soundscapeIndex].emoji}</span>
                         <span>{soundscapes[item.soundscapeIndex].name}</span>
-                        <span className="text-gray-500">
+                        <span className="text-zinc-400">
                           - {item.duration} minutes
                         </span>
                         {currentPlaylist?.name === playlist.name &&
@@ -691,13 +623,6 @@ function Home() {
             </div>
           </div>
         )}
-        <br />
-        <h1 className="text-3xl font-bold">More</h1>
-        <div className="flex flex-wrap gap-2">
-          <SleepTimer />
-          <CreditsMenu />
-        </div>
-        <br />
       </div>
       <Analytics />
     </div>

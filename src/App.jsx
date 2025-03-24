@@ -1,3 +1,5 @@
+"use client";
+
 import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import WhiteNoise from "./pages/WhiteNoise";
@@ -7,14 +9,12 @@ import Settings from "./pages/Settings";
 import BrownNoise from "./pages/BrownNoise";
 import Privacy from "./pages/Privacy";
 import Support from "./pages/Support";
-import PodcastsView from "./pages/PodcastsView";
 import Podcasts from "./pages/Podcasts";
 import Embed from "./pages/Embed";
 import Credits from "./pages/Credits";
 import {
   Sidebar,
   SidebarContent,
-  SidebarFooter,
   SidebarGroup,
   SidebarHeader,
   SidebarTrigger,
@@ -25,11 +25,16 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
   SidebarRail,
+  SidebarInset,
 } from "./components/ui/sidebar";
 import { LucideHome } from "lucide-react";
-import { PodcastIcon } from "lucide-react";
 import { Square } from "lucide-react";
 import { useIsMobile } from "./components/hooks/use-mobile";
+import { Link } from "react-router-dom";
+import NoisefillSvg from "./components/NoisefillSvg";
+import { SiteHeader } from "./components/SiteHeader";
+import { NavLink } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 const pathmap = {
   "/": "Home",
@@ -46,94 +51,94 @@ const pathmap = {
 
 function App() {
   const isMobile = useIsMobile();
+  const location = useLocation();
+  const pathname = location.pathname;
+
   return (
     <SidebarProvider>
-      <div className="md:grid md:grid-cols-[auto_minmax(0,1fr)] min-h-screen w-full">
-        <Sidebar variant="collapsible">
-          <SidebarHeader>
-            <a href="/" className="flex items-center gap-2 p-2">
-              Noisefill
-            </a>
-          </SidebarHeader>
-          <SidebarContent>
-            <SidebarGroup>
-              <SidebarGroupLabel>Pages</SidebarGroupLabel>
-              <SidebarGroupContent>
-                <SidebarMenu>
-                  <SidebarMenuItem key={"home"}>
-                    <SidebarMenuButton
-                      asChild
-                      isActive={window.location.pathname == "/"}
-                    >
-                      <a href="/">
-                        <LucideHome />
-                        <span>Home</span>
-                      </a>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                  <SidebarMenuItem key={"podcasts"}>
-                    <SidebarMenuButton
-                      asChild
-                      isActive={window.location.pathname == "/podcasts"}
-                    >
-                      <a href="/podcasts">
-                        <PodcastIcon />
-                        <span>Podcasts</span>
-                      </a>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                </SidebarMenu>
-              </SidebarGroupContent>
-            </SidebarGroup>
-            <SidebarGroup>
-              <SidebarGroupLabel>Noises</SidebarGroupLabel>
-              <SidebarGroupContent>
-                <SidebarMenu>
-                  <SidebarMenuItem key={"white-noise"}>
-                    <SidebarMenuButton
-                      asChild
-                      isActive={window.location.pathname == "/white-noise"}
-                    >
-                      <a href="/white-noise">
-                        <Square fill="white" />
-                        <span>White Noise</span>
-                      </a>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                  <SidebarMenuItem key={"pink-noise"}>
-                    <SidebarMenuButton
-                      asChild
-                      isActive={window.location.pathname == "/pink-noise"}
-                    >
-                      <a href="/pink-noise">
-                        <Square fill="pink" />
-                        <span>Pink Noise</span>
-                      </a>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                  <SidebarMenuItem key={"brown-noise"}>
-                    <SidebarMenuButton
-                      asChild
-                      isActive={window.location.pathname == "/brown-noise"}
-                    >
-                      <a href="/brown-noise">
-                        <Square fill="brown" />
-                        <span>Brown Noise</span>
-                      </a>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                </SidebarMenu>
-              </SidebarGroupContent>
-            </SidebarGroup>
-          </SidebarContent>
-          <SidebarRail />
-        </Sidebar>
-        <main className="p-4 pt-2 relative w-full h-full">
-          <header className="flex justify-start gap-4 items-center">
-            <SidebarTrigger variant="outline" />
-            <p className="text-md">{pathmap[window.location.pathname]}</p>
-          </header>
-          <div className="mt-3">
+      <Sidebar variant="inset">
+        <SidebarHeader>
+          <a
+            href="/"
+            className="flex items-center gap-1.5 p-2 text-gray-200 hover:text-white transition-colors tracking-[-0.1px] font-medium text-sm"
+          >
+            {/*prettier-ignore*/}
+            <NoisefillSvg />
+            Noisefill
+          </a>
+        </SidebarHeader>
+        <SidebarContent>
+          <SidebarGroup>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                <SidebarMenuItem key={"home"}>
+                  <SidebarMenuButton
+                    asChild
+                    isActive={pathname === "/"}
+                    className="text-gray-300 hover:text-white"
+                  >
+                    <NavLink to="/">
+                      <LucideHome />
+                      <span>Home</span>
+                    </NavLink>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+          <SidebarGroup>
+            <SidebarGroupLabel className="text-gray-400">
+              Noises
+            </SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                <SidebarMenuItem key={"white-noise"}>
+                  <SidebarMenuButton
+                    asChild
+                    isActive={pathname === "/white-noise"}
+                    className="text-gray-300 hover:text-white"
+                  >
+                    <NavLink to="/white-noise">
+                      <Square fill="white" />
+                      <span>White Noise</span>
+                    </NavLink>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+
+                <SidebarMenuItem key={"pink-noise"}>
+                  <SidebarMenuButton
+                    asChild
+                    isActive={pathname === "/pink-noise"}
+                    className="text-gray-300 hover:text-white"
+                  >
+                    <NavLink to="/pink-noise">
+                      <Square fill="pink" />
+                      <span>Pink Noise</span>
+                    </NavLink>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+                <SidebarMenuItem key={"brown-noise"}>
+                  <SidebarMenuButton
+                    asChild
+                    isActive={pathname === "/brown-noise"}
+                    className="text-gray-300 hover:text-white"
+                  >
+                    <NavLink to="/brown-noise">
+                      <Square fill="brown" />
+                      <span>Brown Noise</span>
+                    </NavLink>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        </SidebarContent>
+        <SidebarRail />
+      </Sidebar>
+      <SidebarInset className="bg-[#101012] !border max-h-[calc(100vh-16px)]">
+        <SiteHeader />
+        <div className="overflow-y-auto">
+          <div className="relative z-10 overflow-y-auto p-4">
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/embed" element={<Embed />} />
@@ -144,36 +149,31 @@ function App() {
               <Route path="/privacy" element={<Privacy />} />
               <Route path="/support" element={<Support />} />
               <Route path="/podcasts" element={<Podcasts />} />
-              <Route path="/podcasts/view" element={<PodcastsView />} />
               <Route path="/credits" element={<Credits />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
-          </div>
-          <footer className="flex justify-start items-center p-5 pl-0 gap-2">
-            <p className="text-center text-sm text-muted-foreground">
-              © 2024 George Stone
-            </p>
-            <p className="text-center text-sm text-muted-foreground">•</p>
-            <p className="text-center text-sm text-muted-foreground">
-              Soundscapes from{" "}
-              <a href="/credits" className="hover:underline">
-                various creators
-              </a>
-            </p>
-            {!isMobile ? (
-              <>
-                <p className="text-center text-sm text-muted-foreground">•</p>
-                <a
-                  href="https://github.com/thingbomb/noisefill"
-                  className="text-center text-sm text-muted-foreground hover:underline"
-                >
-                  GitHub repository
+            <footer className="flex justify-start items-center p-5 pl-0 gap-2 relative z-10">
+              <p className="text-center text-sm text-muted-foreground">
+                Soundscapes from{" "}
+                <a href="/credits" className="hover:underline">
+                  various creators
                 </a>
-              </>
-            ) : null}
-          </footer>
-        </main>
-      </div>
+              </p>
+              {!isMobile ? (
+                <>
+                  <p className="text-center text-sm text-muted-foreground">•</p>
+                  <a
+                    href="https://github.com/thingbomb/noisefill"
+                    className="text-center text-sm text-muted-foreground hover:underline"
+                  >
+                    GitHub repository
+                  </a>
+                </>
+              ) : null}
+            </footer>
+          </div>
+        </div>
+      </SidebarInset>
     </SidebarProvider>
   );
 }
