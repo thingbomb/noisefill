@@ -23,8 +23,6 @@ import {
   TooltipTrigger,
 } from "../ui/tooltip";
 
-const SIDEBAR_COOKIE_NAME = "sidebar_state";
-const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
 const SIDEBAR_WIDTH = "16rem";
 const SIDEBAR_WIDTH_MOBILE = "18rem";
 const SIDEBAR_WIDTH_ICON = "3rem";
@@ -44,7 +42,9 @@ function useSidebar() {
 const SidebarProvider = React.forwardRef(
   (
     {
-      defaultOpen = true,
+      defaultOpen = localStorage.getItem("sidebarOpen")
+        ? Number(localStorage.getItem("sidebarOpen"))
+        : true,
       open: openProp,
       onOpenChange: setOpenProp,
       className,
@@ -71,7 +71,7 @@ const SidebarProvider = React.forwardRef(
         }
 
         // This sets the cookie to keep the sidebar state.
-        document.cookie = `${SIDEBAR_COOKIE_NAME}=${openState}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`;
+        localStorage.setItem("sidebarOpen", openState ? "1" : "0");
       },
       [setOpenProp, open]
     );
