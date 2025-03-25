@@ -1,16 +1,16 @@
 {
-    "short_name": "Noisefill",
-    "name": "Noisefill",
-    "description": "Calm soundscapes at your fingertips. Easy to use, no ads, and no tracking.",
-    "icons": [
-        {
-            "src": "favicon.ico",
-            "sizes": "512x512",
-            "type": "image/png"
-        }
-    ],
-    "start_url": "/",
-    "display": "standalone",
-    "theme_color": "#000000",
-    "background_color": "#000000"
+  "short_name": "Noisefill",
+  "name": "Noisefill",
+  "description": "Calm soundscapes at your fingertips. Easy to use, no ads, and no tracking.",
+  "icons": [
+    {
+      "src": "pwa-favicon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml"
+    }
+  ],
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#010101",
+  "background_color": "#010101"
 }
