@@ -41,7 +41,7 @@
     "globals": "^15.9.0",
     "postcss": "^8.4.47",
     "tailwindcss": "^3.4.13",
-    "vite": "^5.4.12"
+    "vite": "^5.4.15"
   },
   "browserslist": {
     "production": [
