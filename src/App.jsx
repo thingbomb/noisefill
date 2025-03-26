@@ -35,6 +35,18 @@ import NoisefillSvg from "./components/NoisefillSvg";
 import { SiteHeader } from "./components/SiteHeader";
 import { NavLink } from "react-router-dom";
 import { useLocation } from "react-router-dom";
+import { soundscapes } from "./soundscapes";
+import { useState, useEffect } from "react";
+import audioRef from "./audioRef";
+import { SkipForward } from "lucide-react";
+import { Button } from "./components/ui/button";
+import { SkipBack } from "lucide-react";
+import { Rewind } from "lucide-react";
+import { Play } from "lucide-react";
+import { Forward } from "lucide-react";
+import { FastForward } from "lucide-react";
+import { Pause } from "lucide-react";
+import { cn } from "./components/lib/utils";
 
 const pathmap = {
   "/": "Home",
@@ -52,20 +64,93 @@ const pathmap = {
 function App() {
   const isMobile = useIsMobile();
   const location = useLocation();
+  const [currentURL, setCurrentURL] = useState(null);
   const pathname = location.pathname;
+  const [audioPlaying, setAudioPlaying] = useState(false);
+  const [audioTitle, setAudioTitle] = useState("");
+
+  useEffect(() => {
+    const audio = audioRef.current || document.getElementById("player");
+    const handleTitleChange = (passedTitle) => {
+      if (!passedTitle) return;
+      setAudioTitle(passedTitle);
+    };
+
+    if (audio) {
+      // Initial state
+      setAudioPlaying(!audio.paused);
+      handleTitleChange(audio.title);
+
+      // Event listeners for play/pause state
+      const handlePlay = () => setAudioPlaying(true);
+      const handlePause = () => setAudioPlaying(false);
+
+      audio.addEventListener("play", handlePlay);
+      audio.addEventListener("pause", handlePause);
+
+      // Listen only for title attribute changes
+      const observer = new MutationObserver((mutations) => {
+        for (const mutation of mutations) {
+          if (mutation.attributeName === "title") {
+            let mutatedTitle = mutation.target.getAttribute("title");
+            handleTitleChange(mutatedTitle);
+          }
+        }
+      });
+
+      observer.observe(audio, {
+        attributes: true,
+        attributeFilter: ["title"],
+      });
+
+      return () => {
+        audio.removeEventListener("play", handlePlay);
+        audio.removeEventListener("pause", handlePause);
+        observer.disconnect();
+      };
+    }
+  }, []);
+
+  const playSound = (url, volume, name, image, index) => {
+    const audio = audioRef.current || document.getElementById("player");
+    if (audio.src === url && playing) {
+      audio.pause();
+      return;
+    } else {
+      // Set up new audio source
+      audio.src = url;
+      audio.title = name;
+      audio.setAttribute("image", image);
+      audio.setAttribute("index", index);
+      setCurrentURL(url);
+
+      // Find the corresponding soundscape to get the volume
+      const soundscape = soundscapes.find((s) => s.url === url);
+      if (soundscape) {
+        // Set volume directly from the soundscape
+        audio.volume = soundscape.volume || 1.0;
+      } else {
+        // Fallback volume
+        audio.volume = volume || 1.0;
+      }
+
+      // Play the audio
+      audio.play();
+    }
+  };
 
   return (
     <SidebarProvider>
       <Sidebar variant="inset">
         <SidebarHeader>
-          <a
-            href="/"
+          <Link
+            to="/"
             className="flex items-center gap-1.5 p-2 text-gray-200 hover:text-white transition-colors tracking-[-0.1px] font-medium text-sm"
           >
             {/*prettier-ignore*/}
             <NoisefillSvg />
             Noisefill
-          </a>
+          </Link>
         </SidebarHeader>
         <SidebarContent>
           <SidebarGroup>
@@ -99,7 +184,7 @@ function App() {
                     className="text-gray-300 hover:text-white"
                   >
                     <NavLink to="/white-noise">
-                      <Square fill="white" />
+                      <Square fill="currentColor" />
                       <span>White Noise</span>
                     </NavLink>
                   </SidebarMenuButton>
@@ -135,12 +220,17 @@ function App() {
         </SidebarContent>
         <SidebarRail />
       </Sidebar>
-      <SidebarInset className="bg-[#101012] !border max-h-[calc(100vh-16px)]">
+      <SidebarInset className="bg-[#101012] !border max-h-[calc(100vh-16px)] flex-col">
         <SiteHeader />
-        <div className="overflow-y-auto">
+        <div className="overflow-y-auto flex-1">
           <div className="relative z-10 overflow-y-auto p-4">
             <Routes>
-              <Route path="/" element={<Home />} />
+              <Route
+                path="/"
+                element={
+                  <Home currentURL={currentURL} setCurrentURL={setCurrentURL} />
+                }
+              />
               <Route path="/embed" element={<Embed />} />
               <Route path="/white-noise" element={<WhiteNoise />} />
               <Route path="/pink-noise" element={<PinkNoise />} />
@@ -152,25 +242,106 @@ function App() {
               <Route path="/credits" element={<Credits />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
-            <footer className="flex justify-start items-center p-5 pl-0 gap-2 relative z-10">
-              <p className="text-center text-sm text-muted-foreground">
-                Soundscapes from{" "}
-                <a href="/credits" className="hover:underline">
-                  various creators
-                </a>
-              </p>
-              {!isMobile ? (
-                <>
-                  <p className="text-center text-sm text-muted-foreground">•</p>
-                  <a
-                    href="https://github.com/thingbomb/noisefill"
-                    className="text-center text-sm text-muted-foreground hover:underline"
-                  >
-                    GitHub repository
-                  </a>
-                </>
-              ) : null}
-            </footer>
+          </div>
+        </div>
+        <div
+          className={cn(
+            "flex px-4 py-2 justify-center gap-4 items-center",
+            "rounded-2xl shadow-lg border absolute",
+            "bg-[#101012]/40 backdrop-blur-xl bottom-4 z-10 w-fit",
+            "left-1/2 -translate-x-1/2",
+            {
+              "!hidden": currentURL == null || currentURL === "",
+            }
+          )}
+        >
+          <div className="left">
+            <Button
+              onClick={() => {
+                const audio =
+                  audioRef.current || document.getElementById("player");
+                if (!audio) return;
+                if (audio.paused) {
+                  audio.play();
+                } else {
+                  audio.pause();
+                }
+              }}
+              aria-label="Play/Pause"
+              variant="ghost"
+              className="px-2"
+            >
+              {audioPlaying ? (
+                <Pause fill="currentColor" />
+              ) : (
+                <Play fill="currentColor" />
+              )}
+            </Button>
+          </div>
+          <div className="center">
+            <p className="text-lg font-medium select-none">{audioTitle}</p>
+          </div>
+          <div className="right flex justify-center items-center">
+            <Button
+              onClick={() => {
+                const audio =
+                  audioRef.current || document.getElementById("player");
+                if (!audio) return;
+                const index = parseInt(audio.getAttribute("index"));
+                if (index > 0) {
+                  playSound(
+                    soundscapes[index - 1].url,
+                    soundscapes[index - 1].volume,
+                    soundscapes[index - 1].name,
+                    soundscapes[index - 1].image,
+                    soundscapes[index - 1].index
+                  );
+                } else {
+                  playSound(
+                    soundscapes[soundscapes.length - 1].url,
+                    soundscapes[soundscapes.length - 1].volume,
+                    soundscapes[soundscapes.length - 1].name,
+                    soundscapes[soundscapes.length - 1].image,
+                    soundscapes[soundscapes.length - 1].index
+                  );
+                }
+              }}
+              aria-label="Previous track"
+              variant="ghost"
+              className="px-2"
+            >
+              <Rewind fill="currentColor" />
+            </Button>
+            <Button
+              onClick={() => {
+                const audio =
+                  audioRef.current || document.getElementById("player");
+                if (!audio) return;
+                const index = parseInt(audio.getAttribute("index"));
+                if (index < soundscapes.length - 1) {
+                  playSound(
+                    soundscapes[index + 1].url,
+                    soundscapes[index + 1].volume,
+                    soundscapes[index + 1].name,
+                    soundscapes[index + 1].image,
+                    soundscapes[index + 1].index
+                  );
+                } else {
+                  playSound(
+                    soundscapes[0].url,
+                    soundscapes[0].volume,
+                    soundscapes[0].name,
+                    soundscapes[0].image,
+                    soundscapes[0].index
+                  );
+                }
+              }}
+              aria-label="Next track"
+              variant="ghost"
+              className="px-2"
+            >
+              <FastForward fill="currentColor" />
+            </Button>
           </div>
         </div>
       </SidebarInset>

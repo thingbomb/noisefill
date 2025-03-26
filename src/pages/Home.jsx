@@ -18,8 +18,8 @@ import {
   getPlaylists,
   deletePlaylist,
 } from "../soundscapes";
-
-let timer;
+import audioRef from "../audioRef";
+import { Link } from "react-router-dom";
 
 function SleepTimer() {
   const [duration, setDuration] = useState(0);
@@ -135,14 +135,13 @@ function SleepTimer() {
 
 function CreditsMenu() {
   return (
-    <a href="/credits">
+    <Link to="/credits">
       <Button variant="outline">📝 Credits</Button>
-    </a>
+    </Link>
   );
 }
 
-function Home() {
-  const [currentURL, setCurrentURL] = useState(null);
+function Home({ currentURL, setCurrentURL }) {
   const [playing, setPlaying] = useState(false);
   const [message, setMessage] = useState("");
   const [selectedSoundscapes, setSelectedSoundscapes] = useState([]);
@@ -155,9 +154,6 @@ function Home() {
   const [currentPlaylistIndex, setCurrentPlaylistIndex] = useState(0);
   const [playlistTimer, setPlaylistTimer] = useState(null);
   const [editingPlaylist, setEditingPlaylist] = useState(null);
-
-  // Simple reference to the audio element
-  const audioRef = useRef(null);
 
   useEffect(() => {
     if (window.location.hostname === "/") {
@@ -413,9 +409,6 @@ function Home() {
 
   return (
     <div className="overflow-y-auto">
-      <audio id="player" ref={audioRef} loop></audio>
-
-      {/* All Soundscapes */}
       <div className="flex flex-wrap gap-2">
         <CreditsMenu />
         {soundscapes.map((sound, index) => (
@@ -624,6 +617,13 @@ function Home() {
           </div>
         )}
       </div>
+      {currentURL && (
+        <>
+          <br />
+          <br />
+          <br />
+        </>
+      )}
       <Analytics />
     </div>
   );
