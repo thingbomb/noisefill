@@ -172,9 +172,21 @@ let soundscapes = [
     volume: 1,
     image: "https://utfs.io/f/VU8He2t54NdYrTIK1A7PtLG5Y82xDew0Ncpqo6IhCjBQRZOn",
     attribution: [
-      "Lofi Chill by Seth_Makes_Sounds -- https://freesound.org/s/659278/ -- License: Creative Commons 0",
+      "Chill Lofi - lost stars.wav by noel0319 -- https://freesound.org/s/680400/ -- License: Creative Commons 0",
     ],
     index: 13,
+    categories: ["focus", "chill", "relax"],
+  },
+  {
+    name: "Retro lofi",
+    emoji: "🕹️",
+    url: "https://cdn.noisefill.com/655516__seth_makes_sounds__lofi-fusion-background-music.flac",
+    volume: 1,
+    image: "https://cdn.noisefill.com/Retro_lofi.png",
+    attribution: [
+      "Lofi Fusion Background Music by Seth_Makes_Sounds -- https://freesound.org/s/655516/ -- License: Creative Commons 0",
+    ],
+    index: 14,
     categories: ["focus", "chill", "relax"],
   },
 ];
