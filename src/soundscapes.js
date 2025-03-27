@@ -144,11 +144,11 @@ let soundscapes = [
   {
     name: "Groovy lofi",
     emoji: "🎸",
-    url: "https://utfs.io/f/VU8He2t54NdYS6D4RpoJxr7Vi3jB5SWTGgQAwCZXEMptHhvn",
+    url: "https://cdn.noisefill.com/655615__seth_makes_sounds__happy-hip-hop-beat.flac",
     volume: 1,
     image: "https://utfs.io/f/VU8He2t54NdYOyCeyq45tUV7W1K4ESdzvZfN8Pr2yCwGuTiB",
     attribution: [
-      "lofi.wav by Seth_Makes_Sounds -- https://freesound.org/s/587897/ -- License: Creative Commons 0",
+      "Happy Hip Hop Beat by Seth_Makes_Sounds -- https://freesound.org/s/655615/ -- License: Creative Commons 0",
     ],
     index: 11,
     categories: ["focus"],
