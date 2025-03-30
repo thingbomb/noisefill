@@ -4,9 +4,9 @@
   "description": "Calm soundscapes at your fingertips. Easy to use, no ads, and no tracking.",
   "icons": [
     {
-      "src": "pwa-favicon.svg",
+      "src": "maskable.png",
       "sizes": "512x512",
-      "type": "image/svg+xml",
+      "type": "image/png",
       "purpose": "any"
     },
     {
