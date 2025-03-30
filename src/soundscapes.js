@@ -189,6 +189,30 @@ let soundscapes = [
     index: 14,
     categories: ["focus", "chill", "relax"],
   },
+  {
+    name: "Classic lofi",
+    emoji: "🎩",
+    url: "https://cdn.noisefill.com/660390__seth_makes_sounds__cute-lofi-instrumental.flac",
+    volume: 1,
+    image: "https://cdn.noisefill.com/Classic_lofi.png",
+    attribution: [
+      "Cute Lofi Instrumental by Seth_Makes_Sounds -- https://freesound.org/s/660390/ -- License: Creative Commons 0",
+    ],
+    index: 15,
+    categories: ["upbeat", "focus"],
+  },
+  {
+    name: "Piano lofi",
+    emoji: "🎹",
+    url: "https://cdn.noisefill.com/Piano.flac",
+    volume: 1,
+    image: "https://cdn.noisefill.com/Piano_lofi.png",
+    attribution: [
+      "Chill Lofi Piano Beat by Seth_Makes_Sounds -- https://freesound.org/s/709779/ -- License: Creative Commons 0",
+    ],
+    index: 16,
+    categories: ["upbeat", "focus", "relax"],
+  },
 ];
 
 export const savePlaylist = (name, description, items, existingId = null) => {
