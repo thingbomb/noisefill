@@ -237,6 +237,18 @@ let soundscapes = [
     index: 18,
     categories: ["upbeat", "focus"],
   },
+  {
+    name: "Vibe lofi",
+    emoji: "✌️",
+    url: "https://cdn.noisefill.com/Vibe.flac",
+    volume: 1,
+    image: "https://cdn.noisefill.com/Vibe_lofi.png",
+    attribution: [
+      "Good Vibe Background Music by Seth_Makes_Sounds -- https://freesound.org/s/661782/ -- License: Creative Commons 0",
+    ],
+    index: 19,
+    categories: ["upbeat", "focus"],
+  },
 ];
 
 export const savePlaylist = (name, description, items, existingId = null) => {
