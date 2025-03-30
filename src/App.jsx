@@ -111,6 +111,31 @@ function App() {
     }
   }, []);
 
+  // Add state to track if we're in a playlist
+  const [currentPlaylist, setCurrentPlaylist] = useState(null);
+  const [currentPlaylistIndex, setCurrentPlaylistIndex] = useState(0);
+
+  // Listen for custom events from Home component to sync playlist state
+  useEffect(() => {
+    const handlePlaylistChange = (event) => {
+      setCurrentPlaylist(event.detail.playlist);
+      setCurrentPlaylistIndex(event.detail.index);
+    };
+
+    const handlePlaylistStop = () => {
+      setCurrentPlaylist(null);
+      setCurrentPlaylistIndex(0);
+    };
+
+    window.addEventListener('playlist-change', handlePlaylistChange);
+    window.addEventListener('playlist-stop', handlePlaylistStop);
+
+    return () => {
+      window.removeEventListener('playlist-change', handlePlaylistChange);
+      window.removeEventListener('playlist-stop', handlePlaylistStop);
+    };
+  }, []);
+
   const playSound = (url, volume, name, image, index) => {
     const audio = audioRef.current || document.getElementById("player");
     if (audio.src === url && playing) {
@@ -137,6 +162,31 @@ function App() {
       // Play the audio
       audio.play();
     }
+  };
+
+  // Function to navigate to next playlist item
+  const playNextPlaylistItem = () => {
+    if (!currentPlaylist || !currentPlaylist.items) return false;
+    
+    const nextIndex = (currentPlaylistIndex + 1) % currentPlaylist.items.length;
+    // Dispatch event to notify Home component to play next item
+    window.dispatchEvent(new CustomEvent('playlist-next', {
+      detail: { index: nextIndex }
+    }));
+    return true;
+  };
+
+  // Function to navigate to previous playlist item
+  const playPreviousPlaylistItem = () => {
+    if (!currentPlaylist || !currentPlaylist.items) return false;
+    
+    const prevIndex = currentPlaylistIndex === 0 ? 
+      currentPlaylist.items.length - 1 : currentPlaylistIndex - 1;
+    // Dispatch event to notify Home component to play previous item
+    window.dispatchEvent(new CustomEvent('playlist-previous', {
+      detail: { index: prevIndex }
+    }));
+    return true;
   };
 
   return (
@@ -284,26 +334,30 @@ function App() {
           <div className="right flex justify-center items-center">
             <Button
               onClick={() => {
-                const audio =
-                  audioRef.current || document.getElementById("player");
-                if (!audio) return;
-                const index = parseInt(audio.getAttribute("index"));
-                if (index > 0) {
-                  playSound(
-                    soundscapes[index - 1].url,
-                    soundscapes[index - 1].volume,
-                    soundscapes[index - 1].name,
-                    soundscapes[index - 1].image,
-                    soundscapes[index - 1].index
-                  );
-                } else {
-                  playSound(
-                    soundscapes[soundscapes.length - 1].url,
-                    soundscapes[soundscapes.length - 1].volume,
-                    soundscapes[soundscapes.length - 1].name,
-                    soundscapes[soundscapes.length - 1].image,
-                    soundscapes[soundscapes.length - 1].index
-                  );
+                // Check if we're in a playlist first
+                if (!playPreviousPlaylistItem()) {
+                  // If not in a playlist or playlist navigation failed, use default behavior
+                  const audio =
+                    audioRef.current || document.getElementById("player");
+                  if (!audio) return;
+                  const index = parseInt(audio.getAttribute("index"));
+                  if (index > 0) {
+                    playSound(
+                      soundscapes[index - 1].url,
+                      soundscapes[index - 1].volume,
+                      soundscapes[index - 1].name,
+                      soundscapes[index - 1].image,
+                      soundscapes[index - 1].index
+                    );
+                  } else {
+                    playSound(
+                      soundscapes[soundscapes.length - 1].url,
+                      soundscapes[soundscapes.length - 1].volume,
+                      soundscapes[soundscapes.length - 1].name,
+                      soundscapes[soundscapes.length - 1].image,
+                      soundscapes[soundscapes.length - 1].index
+                    );
+                  }
                 }
               }}
               aria-label="Previous track"
@@ -314,26 +368,30 @@ function App() {
             </Button>
             <Button
               onClick={() => {
-                const audio =
-                  audioRef.current || document.getElementById("player");
-                if (!audio) return;
-                const index = parseInt(audio.getAttribute("index"));
-                if (index < soundscapes.length - 1) {
-                  playSound(
-                    soundscapes[index + 1].url,
-                    soundscapes[index + 1].volume,
-                    soundscapes[index + 1].name,
-                    soundscapes[index + 1].image,
-                    soundscapes[index + 1].index
-                  );
-                } else {
-                  playSound(
-                    soundscapes[0].url,
-                    soundscapes[0].volume,
-                    soundscapes[0].name,
-                    soundscapes[0].image,
-                    soundscapes[0].index
-                  );
+                // Check if we're in a playlist first
+                if (!playNextPlaylistItem()) {
+                  // If not in a playlist or playlist navigation failed, use default behavior
+                  const audio =
+                    audioRef.current || document.getElementById("player");
+                  if (!audio) return;
+                  const index = parseInt(audio.getAttribute("index"));
+                  if (index < soundscapes.length - 1) {
+                    playSound(
+                      soundscapes[index + 1].url,
+                      soundscapes[index + 1].volume,
+                      soundscapes[index + 1].name,
+                      soundscapes[index + 1].image,
+                      soundscapes[index + 1].index
+                    );
+                  } else {
+                    playSound(
+                      soundscapes[0].url,
+                      soundscapes[0].volume,
+                      soundscapes[0].name,
+                      soundscapes[0].image,
+                      soundscapes[0].index
+                    );
+                  }
                 }
               }}
               aria-label="Next track"

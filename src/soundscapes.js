@@ -213,6 +213,30 @@ let soundscapes = [
     index: 16,
     categories: ["upbeat", "focus", "relax"],
   },
+  {
+    name: "Rising lofi",
+    emoji: "🎶",
+    url: "https://cdn.noisefill.com/Rising.flac",
+    volume: 1,
+    image: "https://cdn.noisefill.com/Rising_lofi.png",
+    attribution: [
+      "Tranquil Lofi Beat by Seth_Makes_Sounds -- https://freesound.org/s/688285/ -- License: Creative Commons 0",
+    ],
+    index: 17,
+    categories: ["upbeat", "focus", "relax"],
+  },
+  {
+    name: "Deep lofi",
+    emoji: "🕳️",
+    url: "https://cdn.noisefill.com/Deep.flac",
+    volume: 1,
+    image: "https://cdn.noisefill.com/Deep_lofi.png",
+    attribution: [
+      "Vanilla Lofi Beat by Seth_Makes_Sounds -- https://freesound.org/s/691510/ -- License: Creative Commons 0",
+    ],
+    index: 18,
+    categories: ["upbeat", "focus"],
+  },
 ];
 
 export const savePlaylist = (name, description, items, existingId = null) => {

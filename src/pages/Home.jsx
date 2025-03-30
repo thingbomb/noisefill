@@ -250,6 +250,39 @@ function Home({ currentURL, setCurrentURL }) {
     };
   }, [playlistTimer]);
 
+  // Add event listeners for playlist navigation from the media bar
+  useEffect(() => {
+    const handlePlaylistNext = (event) => {
+      if (currentPlaylist) {
+        // We're checking if we have a current playlist, regardless of ID
+        // Clear any existing timer to prevent double transitions
+        if (playlistTimer) {
+          clearTimeout(playlistTimer);
+        }
+        playPlaylistItem(currentPlaylist, event.detail.index);
+      }
+    };
+
+    const handlePlaylistPrevious = (event) => {
+      if (currentPlaylist) {
+        // We're checking if we have a current playlist, regardless of ID
+        // Clear any existing timer to prevent double transitions
+        if (playlistTimer) {
+          clearTimeout(playlistTimer);
+        }
+        playPlaylistItem(currentPlaylist, event.detail.index);
+      }
+    };
+
+    window.addEventListener("playlist-next", handlePlaylistNext);
+    window.addEventListener("playlist-previous", handlePlaylistPrevious);
+
+    return () => {
+      window.removeEventListener("playlist-next", handlePlaylistNext);
+      window.removeEventListener("playlist-previous", handlePlaylistPrevious);
+    };
+  }, [currentPlaylist, playlistTimer]);
+
   const handleAddToPlaylist = (soundscape) => {
     if (
       playlistItems.some((item) => item.soundscapeIndex === soundscape.index)
@@ -353,6 +386,13 @@ function Home({ currentURL, setCurrentURL }) {
     setCurrentPlaylist(playlist);
     setCurrentPlaylistIndex(0);
     playPlaylistItem(playlist, 0);
+
+    // Dispatch event to notify App component about playlist change
+    window.dispatchEvent(
+      new CustomEvent("playlist-change", {
+        detail: { playlist, index: 0 },
+      })
+    );
   };
 
   const playPlaylistItem = (playlist, index) => {
@@ -366,6 +406,10 @@ function Home({ currentURL, setCurrentURL }) {
 
     const audio = audioRef.current || document.getElementById("player");
     audio.src = soundscape.url;
+    // Set all necessary attributes for the media bar to update properly
+    audio.title = soundscape.name;
+    audio.setAttribute("image", soundscape.image);
+    audio.setAttribute("index", soundscape.index);
     // Set volume directly from soundscape
     audio.volume = soundscape.volume || 1.0;
     setCurrentURL(soundscape.url);
@@ -382,6 +426,13 @@ function Home({ currentURL, setCurrentURL }) {
     // Set up playlist state
     setCurrentPlaylist(playlist);
     setCurrentPlaylistIndex(index);
+
+    // Dispatch event to notify App component about playlist item change
+    window.dispatchEvent(
+      new CustomEvent("playlist-change", {
+        detail: { playlist, index },
+      })
+    );
 
     // Set timer for next track
     const minutes = parseInt(item.duration);
@@ -405,6 +456,9 @@ function Home({ currentURL, setCurrentURL }) {
     audio.pause();
     setPlaying(false);
     setMessage("");
+
+    // Dispatch event to notify App component that playlist has stopped
+    window.dispatchEvent(new CustomEvent("playlist-stop"));
   };
 
   return (
@@ -605,7 +659,7 @@ function Home({ currentURL, setCurrentURL }) {
                         {currentPlaylist?.name === playlist.name &&
                           currentPlaylistIndex === itemIndex && (
                             <span className="ml-2 text-blue-500">
-                              ▶ Playing
+                              {playing ? "⏸︎ Playing" : "▶︎ Paused"}
                             </span>
                           )}
                       </div>
