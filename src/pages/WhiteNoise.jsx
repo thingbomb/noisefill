@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Button } from "../components/ui/button";
+import { Link } from "react-router-dom";
 
 function WhiteNoise() {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -78,11 +79,15 @@ function WhiteNoise() {
         )}
         <br />
         <br />
-        Try out{" "}
-        <a href="/pink-noise" className="text-blue-500 hover:underline">
-          Pink Noise
-        </a>{" "}
-        if White Noise is too harsh.
+        <p className="text-red-200">
+          ⚠︎ Please check your volume before playing. White Noise can be intense
+          and potentially harmful at high volumes. Start at a low volume and
+          gradually increase it until you find a comfortable level. Try out{" "}
+          <Link to="/pink-noise" className="text-red-400 hover:underline">
+            Pink Noise
+          </Link>{" "}
+          if White Noise is too harsh.
+        </p>
       </div>
     </div>
   );

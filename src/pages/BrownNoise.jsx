@@ -71,6 +71,13 @@ function BrownNoise() {
             Pause
           </Button>
         )}
+        <br />
+        <br />
+        <p className="text-zinc-300">
+          ⚠︎ Please check your volume before playing. Although Brown Noise is a
+          lighter version of White Noise, it may still be loud, especially on
+          headphone.
+        </p>
       </div>
     </div>
   );

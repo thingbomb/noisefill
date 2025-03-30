@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Button } from "../components/ui/button";
+import { Link } from "react-router-dom";
 
 function PinkNoise() {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -80,11 +81,15 @@ function PinkNoise() {
         )}
       </div>
       <br />
-      Try out{" "}
-      <a href="/brown-noise" className="text-blue-500 hover:underline">
-        Brown Noise
-      </a>{" "}
-      if Pink Noise is too harsh.
+      <p className="text-orange-200">
+        ⚠︎ Please check your volume before playing. Pink Noise can be harsh and
+        potentially harmful at high volumes. Start at a low volume and gradually
+        increase it until you find a comfortable level. Try out{" "}
+        <Link to="/brown-noise" className="text-orange-400 hover:underline">
+          Brown Noise
+        </Link>{" "}
+        if Pink Noise is too harsh.
+      </p>
     </div>
   );
 }
