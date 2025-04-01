@@ -461,6 +461,12 @@ function Home({ currentURL, setCurrentURL }) {
     window.dispatchEvent(new CustomEvent("playlist-stop"));
   };
 
+  useEffect(() => {
+    if (window.location.pathname === "/") {
+      document.title = "Noisefill";
+    }
+  }, []);
+
   return (
     <div className="overflow-y-auto">
       <div className="flex flex-wrap gap-2">
