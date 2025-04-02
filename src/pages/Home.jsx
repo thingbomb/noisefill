@@ -11,7 +11,6 @@ import {
 } from "../components/ui/dialog";
 import { Label } from "../components/ui/label";
 import { Input } from "../components/ui/input";
-import { Analytics } from "@vercel/analytics/react";
 import {
   soundscapes,
   savePlaylist,
@@ -684,7 +683,6 @@ function Home({ currentURL, setCurrentURL }) {
           <br />
         </>
       )}
-      <Analytics />
     </div>
   );
 }
