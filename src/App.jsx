@@ -47,6 +47,8 @@ import { Forward } from "lucide-react";
 import { FastForward } from "lucide-react";
 import { Pause } from "lucide-react";
 import { cn } from "./components/lib/utils";
+import { Shield } from "lucide-react";
+import { Notebook } from "lucide-react";
 
 const pathmap = {
   "/": "Home",
@@ -127,12 +129,12 @@ function App() {
       setCurrentPlaylistIndex(0);
     };
 
-    window.addEventListener('playlist-change', handlePlaylistChange);
-    window.addEventListener('playlist-stop', handlePlaylistStop);
+    window.addEventListener("playlist-change", handlePlaylistChange);
+    window.addEventListener("playlist-stop", handlePlaylistStop);
 
     return () => {
-      window.removeEventListener('playlist-change', handlePlaylistChange);
-      window.removeEventListener('playlist-stop', handlePlaylistStop);
+      window.removeEventListener("playlist-change", handlePlaylistChange);
+      window.removeEventListener("playlist-stop", handlePlaylistStop);
     };
   }, []);
 
@@ -167,25 +169,31 @@ function App() {
   // Function to navigate to next playlist item
   const playNextPlaylistItem = () => {
     if (!currentPlaylist || !currentPlaylist.items) return false;
-    
+
     const nextIndex = (currentPlaylistIndex + 1) % currentPlaylist.items.length;
     // Dispatch event to notify Home component to play next item
-    window.dispatchEvent(new CustomEvent('playlist-next', {
-      detail: { index: nextIndex }
-    }));
+    window.dispatchEvent(
+      new CustomEvent("playlist-next", {
+        detail: { index: nextIndex },
+      })
+    );
     return true;
   };
 
   // Function to navigate to previous playlist item
   const playPreviousPlaylistItem = () => {
     if (!currentPlaylist || !currentPlaylist.items) return false;
-    
-    const prevIndex = currentPlaylistIndex === 0 ? 
-      currentPlaylist.items.length - 1 : currentPlaylistIndex - 1;
+
+    const prevIndex =
+      currentPlaylistIndex === 0
+        ? currentPlaylist.items.length - 1
+        : currentPlaylistIndex - 1;
     // Dispatch event to notify Home component to play previous item
-    window.dispatchEvent(new CustomEvent('playlist-previous', {
-      detail: { index: prevIndex }
-    }));
+    window.dispatchEvent(
+      new CustomEvent("playlist-previous", {
+        detail: { index: prevIndex },
+      })
+    );
     return true;
   };
 
@@ -261,6 +269,39 @@ function App() {
                     <NavLink to="/brown-noise">
                       <Square fill="brown" />
                       <span>Brown Noise</span>
+                    </NavLink>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+          <SidebarGroup>
+            <SidebarGroupLabel className="text-gray-400">
+              About
+            </SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                <SidebarMenuItem key={"privacy"}>
+                  <SidebarMenuButton
+                    asChild
+                    isActive={pathname === "/privacy"}
+                    className="text-gray-300 hover:text-white"
+                  >
+                    <NavLink to="/privacy">
+                      <Shield />
+                      <span>Privacy</span>
+                    </NavLink>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+                <SidebarMenuItem key={"credits"}>
+                  <SidebarMenuButton
+                    asChild
+                    isActive={pathname === "/credits"}
+                    className="text-gray-300 hover:text-white"
+                  >
+                    <NavLink to="/credits">
+                      <Notebook />
+                      <span>Credits</span>
                     </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
