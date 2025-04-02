@@ -13,6 +13,11 @@ function Main() {
         <App />
       </BrowserRouter>
       <audio id="player" ref={audioRef} loop />
+      {/* 100% privacy-first analytics */}
+      <script
+        async
+        src="https://scripts.simpleanalyticscdn.com/latest.js"
+      ></script>
     </>
   );
 }
