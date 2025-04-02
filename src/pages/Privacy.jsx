@@ -71,17 +71,16 @@ export default function Privacy() {
         <h2 className="text-xl font-bold">Definitions</h2>
         <ul className="list-disc pl-6 space-y-2">
           <li>
-            <strong>Log Data</strong>: Refers to any information that your
-            browser or device sends to our server when accessing our website or
-            using our browser extension. This can include your IP address,
-            browser type, the date and time of your visit or usage, and other
-            similar technical data.
+            <strong>Usage Data</strong>: Refers to any information that your
+            browser or device sends to our server when accessing our website.
+            This can include your IP address, browser type, the date and time of
+            your visit or usage, and other similar technical data.
           </li>
           <li>
-            <strong>Usage Data</strong>: Refers to information collected
-            automatically about how you interact with our website or browser
-            extension. This can include data on the pages or features you visit,
-            how often you use the extension, and other analytics data.
+            <strong>Log Data</strong>: Refers to information collected
+            automatically about how you interact with our website. This can
+            include data on the pages or features you visit, Usage Data, and the
+            time of your visit.
           </li>
           <li>
             <strong>Soundscapes</strong>: Refers to the soundscapes that you
@@ -234,7 +233,7 @@ export default function Privacy() {
         </p>
 
         <p className="text-base font-semibold">Last updated</p>
-        <p className="text-base">April 1, 2025</p>
+        <p className="text-base">April 2, 2025</p>
       </article>
     </div>
   );
