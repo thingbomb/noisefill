@@ -39,7 +39,7 @@ let soundscapes = [
     url: "https://cdn.noisefill.com/Rain.wav",
     volume: 1,
     attribution: [
-      "Rain.wav by idomusics -- https://freesound.org/s/518863/ -- License: Creative Commons 0",
+      "Rain heavy 2 (rural) by jmbphilmes -- https://freesound.org/s/200272/ -- License: Creative Commons 0",
     ],
     image: "https://cdn.noisefill.com/rain.png",
     index: 2,
