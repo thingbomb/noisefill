@@ -1,4 +1,4 @@
-import React from "react";
+import { useEffect } from "react";
 import { soundscapes } from "../soundscapes";
 
 /**
@@ -7,6 +7,11 @@ import { soundscapes } from "../soundscapes";
  * It renders a grid of soundscapes with their emoji, name, and attribution.
  */
 function Credits() {
+  useEffect(() => {
+    if (window.location.pathname === "/credits") {
+      document.title = "Credits - Noisefill";
+    }
+  }, []);
   return (
     <div className="container mx-auto">
       <h1 className="text-2xl font-bold mb-3">Credits</h1>

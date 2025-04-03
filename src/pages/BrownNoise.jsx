@@ -45,10 +45,10 @@ function BrownNoise() {
   };
 
   useEffect(() => {
+    if (window.location.pathname === "/brown-noise") {
+      document.title = "Brown Noise - Noisefill";
+    }
     return () => {
-      if (window.location.pathname === "/brown-noise") {
-        document.title = "Brown Noise - Noisefill";
-      }
       if (brownNoiseNodeRef.current) {
         brownNoiseNodeRef.current.disconnect();
       }
