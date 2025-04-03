@@ -46,6 +46,7 @@ import { Play } from "lucide-react";
 import { Forward } from "lucide-react";
 import { FastForward } from "lucide-react";
 import { Pause } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { cn } from "./components/lib/utils";
 import { Shield } from "lucide-react";
 import { Notebook } from "lucide-react";
@@ -70,6 +71,7 @@ function App() {
   const pathname = location.pathname;
   const [audioPlaying, setAudioPlaying] = useState(false);
   const [audioTitle, setAudioTitle] = useState("");
+  const [audioLoading, setAudioLoading] = useState(false);
 
   useEffect(() => {
     const audio = audioRef.current || document.getElementById("player");
@@ -87,8 +89,16 @@ function App() {
       const handlePlay = () => setAudioPlaying(true);
       const handlePause = () => setAudioPlaying(false);
 
+      // Event listeners for loading state
+      const handleLoadStart = () => setAudioLoading(true);
+      const handleCanPlay = () => setAudioLoading(false);
+      const handleError = () => setAudioLoading(false);
+
       audio.addEventListener("play", handlePlay);
       audio.addEventListener("pause", handlePause);
+      audio.addEventListener("loadstart", handleLoadStart);
+      audio.addEventListener("canplay", handleCanPlay);
+      audio.addEventListener("error", handleError);
 
       // Listen only for title attribute changes
       const observer = new MutationObserver((mutations) => {
@@ -108,6 +118,9 @@ function App() {
       return () => {
         audio.removeEventListener("play", handlePlay);
         audio.removeEventListener("pause", handlePause);
+        audio.removeEventListener("loadstart", handleLoadStart);
+        audio.removeEventListener("canplay", handleCanPlay);
+        audio.removeEventListener("error", handleError);
         observer.disconnect();
       };
     }
@@ -140,10 +153,13 @@ function App() {
 
   const playSound = (url, volume, name, image, index) => {
     const audio = audioRef.current || document.getElementById("player");
-    if (audio.src === url && playing) {
+    if (audio.src === url && audioPlaying) {
       audio.pause();
       return;
     } else {
+      // Set loading state to true when starting to load a new audio
+      setAudioLoading(true);
+
       // Set up new audio source
       audio.src = url;
       audio.title = name;
@@ -340,108 +356,121 @@ function App() {
             "flex px-4 py-2 justify-center gap-4 items-center",
             "rounded-2xl shadow-lg border absolute",
             "bg-[#101012]/40 backdrop-blur-xl bottom-4 z-10 w-fit",
-            "left-1/2 -translate-x-1/2",
+            "left-1/2 -translate-x-1/2 h-[58px]",
             {
               "!hidden": currentURL == null || currentURL === "",
             }
           )}
         >
-          <div className="left">
-            <Button
-              onClick={() => {
-                const audio =
-                  audioRef.current || document.getElementById("player");
-                if (!audio) return;
-                if (audio.paused) {
-                  audio.play();
-                } else {
-                  audio.pause();
-                }
-              }}
-              aria-label="Play/Pause"
-              variant="ghost"
-              className="px-2"
-            >
-              {audioPlaying ? (
-                <Pause fill="currentColor" />
-              ) : (
-                <Play fill="currentColor" />
-              )}
-            </Button>
-          </div>
-          <div className="center">
-            <p className="text-lg font-medium select-none">{audioTitle}</p>
-          </div>
-          <div className="right flex justify-center items-center">
-            <Button
-              onClick={() => {
-                // Check if we're in a playlist first
-                if (!playPreviousPlaylistItem()) {
-                  // If not in a playlist or playlist navigation failed, use default behavior
-                  const audio =
-                    audioRef.current || document.getElementById("player");
-                  if (!audio) return;
-                  const index = parseInt(audio.getAttribute("index"));
-                  if (index > 0) {
-                    playSound(
-                      soundscapes[index - 1].url,
-                      soundscapes[index - 1].volume,
-                      soundscapes[index - 1].name,
-                      soundscapes[index - 1].image,
-                      soundscapes[index - 1].index
-                    );
-                  } else {
-                    playSound(
-                      soundscapes[soundscapes.length - 1].url,
-                      soundscapes[soundscapes.length - 1].volume,
-                      soundscapes[soundscapes.length - 1].name,
-                      soundscapes[soundscapes.length - 1].image,
-                      soundscapes[soundscapes.length - 1].index
-                    );
-                  }
-                }
-              }}
-              aria-label="Previous track"
-              variant="ghost"
-              className="px-2"
-            >
-              <Rewind fill="currentColor" />
-            </Button>
-            <Button
-              onClick={() => {
-                // Check if we're in a playlist first
-                if (!playNextPlaylistItem()) {
-                  // If not in a playlist or playlist navigation failed, use default behavior
-                  const audio =
-                    audioRef.current || document.getElementById("player");
-                  if (!audio) return;
-                  const index = parseInt(audio.getAttribute("index"));
-                  if (index < soundscapes.length - 1) {
-                    playSound(
-                      soundscapes[index + 1].url,
-                      soundscapes[index + 1].volume,
-                      soundscapes[index + 1].name,
-                      soundscapes[index + 1].image,
-                      soundscapes[index + 1].index
-                    );
-                  } else {
-                    playSound(
-                      soundscapes[0].url,
-                      soundscapes[0].volume,
-                      soundscapes[0].name,
-                      soundscapes[0].image,
-                      soundscapes[0].index
-                    );
-                  }
-                }
-              }}
-              aria-label="Next track"
-              variant="ghost"
-              className="px-2"
-            >
-              <FastForward fill="currentColor" />
-            </Button>
-          </div>
+          {audioLoading ? (
+            <div className="center flex items-center gap-3">
+              <Loader2 className="h-5 w-5 animate-spin text-gray-300" />
+              <p className="text-lg font-medium select-none">
+                {audioTitle || "Loading audio..."}
+              </p>
+            </div>
+          ) : (
+            <>
+              <div className="left">
+                <Button
+                  onClick={() => {
+                    const audio =
+                      audioRef.current || document.getElementById("player");
+                    if (!audio) return;
+                    if (audio.paused) {
+                      audio.play();
+                    } else {
+                      audio.pause();
+                    }
+                  }}
+                  aria-label="Play/Pause"
+                  variant="ghost"
+                  className="px-2"
+                >
+                  {audioPlaying ? (
+                    <Pause fill="currentColor" />
+                  ) : (
+                    <Play fill="currentColor" />
+                  )}
+                </Button>
+              </div>
+              <div className="center">
+                <p className="text-lg w-fit whitespace-nowrap font-medium select-none">
+                  {audioTitle}
+                </p>
+              </div>
+              <div className="right flex justify-center items-center">
+                <Button
+                  onClick={() => {
+                    // Check if we're in a playlist first
+                    if (!playPreviousPlaylistItem()) {
+                      // If not in a playlist or playlist navigation failed, use default behavior
+                      const audio =
+                        audioRef.current || document.getElementById("player");
+                      if (!audio) return;
+                      const index = parseInt(audio.getAttribute("index"));
+                      if (index > 0) {
+                        playSound(
+                          soundscapes[index - 1].url,
+                          soundscapes[index - 1].volume,
+                          soundscapes[index - 1].name,
+                          soundscapes[index - 1].image,
+                          soundscapes[index - 1].index
+                        );
+                      } else {
+                        playSound(
+                          soundscapes[soundscapes.length - 1].url,
+                          soundscapes[soundscapes.length - 1].volume,
+                          soundscapes[soundscapes.length - 1].name,
+                          soundscapes[soundscapes.length - 1].image,
+                          soundscapes[soundscapes.length - 1].index
+                        );
+                      }
+                    }
+                  }}
+                  aria-label="Previous track"
+                  variant="ghost"
+                  className="px-2"
+                >
+                  <Rewind fill="currentColor" />
+                </Button>
+                <Button
+                  onClick={() => {
+                    // Check if we're in a playlist first
+                    if (!playNextPlaylistItem()) {
+                      // If not in a playlist or playlist navigation failed, use default behavior
+                      const audio =
+                        audioRef.current || document.getElementById("player");
+                      if (!audio) return;
+                      const index = parseInt(audio.getAttribute("index"));
+                      if (index < soundscapes.length - 1) {
+                        playSound(
+                          soundscapes[index + 1].url,
+                          soundscapes[index + 1].volume,
+                          soundscapes[index + 1].name,
+                          soundscapes[index + 1].image,
+                          soundscapes[index + 1].index
+                        );
+                      } else {
+                        playSound(
+                          soundscapes[0].url,
+                          soundscapes[0].volume,
+                          soundscapes[0].name,
+                          soundscapes[0].image,
+                          soundscapes[0].index
+                        );
+                      }
+                    }
+                  }}
+                  aria-label="Next track"
+                  variant="ghost"
+                  className="px-2"
+                >
+                  <FastForward fill="currentColor" />
+                </Button>
+              </div>
+            </>
+          )}
         </div>
       </SidebarInset>
     </SidebarProvider>

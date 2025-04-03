@@ -166,11 +166,6 @@ function Home({ currentURL, setCurrentURL }) {
     });
     audio.addEventListener("play", () => {
       setPlaying(true);
-      if (audioRef.current.currentTime < 1) {
-        setMessage("(loading)");
-      } else {
-        setMessage("(playing)");
-      }
       if (navigator.mediaSession) {
         navigator.mediaSession.metadata = new MediaMetadata({
           title: `${document.getElementById("player").title}`,
@@ -231,9 +226,6 @@ function Home({ currentURL, setCurrentURL }) {
           }
         });
       }
-    });
-    audio.addEventListener("loadedmetadata", () => {
-      setMessage("(playing)");
     });
   }, []);
 
@@ -355,7 +347,10 @@ function Home({ currentURL, setCurrentURL }) {
 
   const playSound = (url, volume, name, image, index) => {
     const audio = audioRef.current || document.getElementById("player");
-    if (audio.src === url && playing) {
+    if (
+      audio.src === url &&
+      document.getElementById("player").paused === false
+    ) {
       audio.pause();
       return;
     } else {
