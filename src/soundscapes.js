@@ -51,7 +51,7 @@ let soundscapes = [
     url: "https://cdn.noisefill.com/River.flac",
     volume: 0.8,
     attribution: [
-      "river small brook stream with rolling splashy good detail.flac by kyles -- https://freesound.org/s/454155/ -- License: Creative Commons 0",
+      "Relaxing, Mountains, Rivers, Streams, Running Water by INNORECORDS -- https://freesound.org/s/469009/ -- License: Creative Commons 0",
     ],
     image: "https://cdn.noisefill.com/river.png",
     index: 3,
