@@ -25,6 +25,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "cmdk": "^1.0.0",
+    "esbuild": "0.25.0",
     "lucide-react": "^0.441.0",
     "postcss-nested": "^6.2.0",
     "react": "^18.3.1",
@@ -35,12 +36,12 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.9.0",
-    "@vitejs/plugin-react": "^4.3.1",
+    "@vitejs/plugin-react": "^4.3.4",
     "autoprefixer": "^10.4.20",
     "globals": "^15.9.0",
     "postcss": "^8.4.47",
     "tailwindcss": "^3.4.13",
-    "vite": "^5.4.16"
+    "vite": "^6.2.5"
   },
   "browserslist": {
     "production": [
