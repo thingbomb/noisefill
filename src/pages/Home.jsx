@@ -469,7 +469,21 @@ function Home({ currentURL, setCurrentURL }) {
           <Button
             variant="outline"
             key={index}
-            onClick={() => {
+            onMouseDown={(event) => {
+              playSound(
+                sound.url,
+                sound.volume,
+                sound.name,
+                sound.image,
+                sound.index
+              );
+              event.target.mouseDownHandled = true;
+            }}
+            onClick={(event) => {
+              if (event.target.mouseDownHandled) {
+                event.target.mouseDownHandled = false;
+                return;
+              }
               playSound(
                 sound.url,
                 sound.volume,

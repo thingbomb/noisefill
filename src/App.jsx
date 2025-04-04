@@ -219,6 +219,10 @@ function App() {
         <SidebarHeader>
           <Link
             to="/"
+            onMouseDown={(e) => {
+              e.preventDefault();
+              e.target.click();
+            }}
             className="flex items-center gap-1.5 p-2 text-gray-200 hover:text-white transition-colors tracking-[-0.1px] font-medium text-sm"
           >
             {/*prettier-ignore*/}
@@ -236,7 +240,13 @@ function App() {
                     isActive={pathname === "/"}
                     className="text-gray-300 hover:text-white"
                   >
-                    <NavLink to="/">
+                    <NavLink
+                      to="/"
+                      onMouseDown={(e) => {
+                        e.preventDefault();
+                        e.target.click();
+                      }}
+                    >
                       <LucideHome />
                       <span>Home</span>
                     </NavLink>
@@ -257,7 +267,13 @@ function App() {
                     isActive={pathname === "/white-noise"}
                     className="text-gray-300 hover:text-white"
                   >
-                    <NavLink to="/white-noise">
+                    <NavLink
+                      to="/white-noise"
+                      onMouseDown={(e) => {
+                        e.preventDefault();
+                        e.target.click();
+                      }}
+                    >
                       <Square fill="currentColor" />
                       <span>White Noise</span>
                     </NavLink>
@@ -270,7 +286,13 @@ function App() {
                     isActive={pathname === "/pink-noise"}
                     className="text-gray-300 hover:text-white"
                   >
-                    <NavLink to="/pink-noise">
+                    <NavLink
+                      to="/pink-noise"
+                      onMouseDown={(e) => {
+                        e.preventDefault();
+                        e.target.click();
+                      }}
+                    >
                       <Square fill="pink" />
                       <span>Pink Noise</span>
                     </NavLink>
@@ -282,7 +304,13 @@ function App() {
                     isActive={pathname === "/brown-noise"}
                     className="text-gray-300 hover:text-white"
                   >
-                    <NavLink to="/brown-noise">
+                    <NavLink
+                      to="/brown-noise"
+                      onMouseDown={(e) => {
+                        e.preventDefault();
+                        e.target.click();
+                      }}
+                    >
                       <Square fill="brown" />
                       <span>Brown Noise</span>
                     </NavLink>
@@ -303,7 +331,13 @@ function App() {
                     isActive={pathname === "/privacy"}
                     className="text-gray-300 hover:text-white"
                   >
-                    <NavLink to="/privacy">
+                    <NavLink
+                      to="/privacy"
+                      onMouseDown={(e) => {
+                        e.preventDefault();
+                        e.target.click();
+                      }}
+                    >
                       <Shield />
                       <span>Privacy</span>
                     </NavLink>
@@ -315,7 +349,13 @@ function App() {
                     isActive={pathname === "/credits"}
                     className="text-gray-300 hover:text-white"
                   >
-                    <NavLink to="/credits">
+                    <NavLink
+                      to="/credits"
+                      onMouseDown={(e) => {
+                        e.preventDefault();
+                        e.target.click();
+                      }}
+                    >
                       <Notebook />
                       <span>Credits</span>
                     </NavLink>
