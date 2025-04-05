@@ -463,7 +463,15 @@ function Home({ currentURL, setCurrentURL }) {
 
   return (
     <div className="overflow-y-auto">
-      <div className="flex flex-wrap gap-2">
+      <span className="text-gray-400">
+        Noisefill did not make the soundscapes below and does not imply an
+        endorsement/affiliation by the author.{" "}
+        <Link to="/credits" className="text-white hover:underline">
+          Learn more
+        </Link>
+        .
+      </span>
+      <div className="flex flex-wrap gap-2 mt-2">
         <CreditsMenu />
         {soundscapes.map((sound, index) => (
           <Button
