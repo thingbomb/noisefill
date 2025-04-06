@@ -221,6 +221,16 @@ export default function Privacy() {
           are subject to the services' respective data retention policies.
         </p>
 
+        <h2 className="text-xl font-bold">Third-Party Links</h2>
+        <p className="text-base">
+          Our website may contain links to external websites operated by third
+          parties. We do not control or endorse the content, privacy policies,
+          or practices of these third-party sites. By clicking on such links,
+          you acknowledge and agree that we are not responsible for any
+          activities, damages, or issues that may arise when accessing these
+          external sites.
+        </p>
+
         <h2 className="text-xl font-bold">Changes and Support</h2>
         <p className="text-base">
           We may update this privacy policy from time to time. Any changes will
@@ -233,7 +243,7 @@ export default function Privacy() {
         </p>
 
         <p className="text-base font-semibold">Last updated</p>
-        <p className="text-base">April 2, 2025</p>
+        <p className="text-base">April 6, 2025</p>
       </article>
     </div>
   );
