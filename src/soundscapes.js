@@ -174,6 +174,7 @@ let soundscapes = [
     attribution: [
       "Chill Lofi - lost stars.wav by noel0319 -- https://freesound.org/s/680400/ -- License: Creative Commons 0",
     ],
+    reversedURL: "https://cdn.noisefill.com/ReversedChill.mp3",
     index: 13,
     categories: ["focus", "chill", "relax"],
   },
@@ -186,7 +187,7 @@ let soundscapes = [
     attribution: [
       "Lofi Fusion Background Music by Seth_Makes_Sounds -- https://freesound.org/s/655516/ -- License: Creative Commons 0",
     ],
-    reversedURL: "https://cdn.noisefill.com/ReversedRetro.flac",
+    reversedURL: "https://cdn.noisefill.com/ReversedRetro.mp3",
     index: 14,
     categories: ["focus", "chill", "relax"],
   },
