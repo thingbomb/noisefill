@@ -252,6 +252,7 @@ let soundscapes = [
     attribution: [
       "Good Vibe Background Music by Seth_Makes_Sounds -- https://freesound.org/s/661782/ -- License: Creative Commons 0",
     ],
+    reversedURL: "https://cdn.noisefill.com/ReversedVibe.flac",
     index: 19,
     categories: ["upbeat", "focus"],
   },
