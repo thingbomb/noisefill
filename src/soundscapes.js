@@ -163,6 +163,7 @@ let soundscapes = [
     attribution: [
       "Lofi Guitar Beat 70bpm by Seth_Makes_Sounds -- https://freesound.org/s/659278/ -- License: Creative Commons 0",
     ],
+    reversedURL: "https://cdn.noisefill.com/ReversedUpbeat.mp3",
     index: 12,
     categories: ["focus", "chill", "relax"],
   },
