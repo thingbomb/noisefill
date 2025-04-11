@@ -240,6 +240,7 @@ let soundscapes = [
     attribution: [
       "Vanilla Lofi Beat by Seth_Makes_Sounds -- https://freesound.org/s/691510/ -- License: Creative Commons 0",
     ],
+    reversedURL: "https://cdn.noisefill.com/ReversedDeep.flac",
     index: 18,
     categories: ["upbeat", "focus"],
   },
