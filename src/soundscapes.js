@@ -228,6 +228,7 @@ let soundscapes = [
     attribution: [
       "Tranquil Lofi Beat by Seth_Makes_Sounds -- https://freesound.org/s/688285/ -- License: Creative Commons 0",
     ],
+    reversedURL: "https://cdn.noisefill.com/ReversedRising.flac",
     index: 17,
     categories: ["upbeat", "focus", "relax"],
   },
