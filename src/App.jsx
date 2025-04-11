@@ -50,6 +50,7 @@ import { Loader2 } from "lucide-react";
 import { cn } from "./components/lib/utils";
 import { Shield } from "lucide-react";
 import { Notebook } from "lucide-react";
+import { Github } from "lucide-react";
 
 const pathmap = {
   "/": "Home",
@@ -87,10 +88,10 @@ function App() {
       const savedPreferences = localStorage.getItem("listeningPreferences");
       if (savedPreferences) {
         const parsedPrefs = JSON.parse(savedPreferences);
-          
+
         // Convert any existing data to the new format (totalMinutes + sessionCount)
         const updatedPrefs = {};
-          
+
         Object.entries(parsedPrefs).forEach(([key, data]) => {
           // If the old format has listeningSessions array, convert to sessionCount
           if (data.listeningSessions) {
@@ -106,7 +107,7 @@ function App() {
             };
           }
         });
-          
+
         setListeningPreferences(updatedPrefs);
       }
     } catch (error) {
@@ -151,19 +152,19 @@ function App() {
       // Event listeners for play/pause state
       const handlePlay = () => {
         setAudioPlaying(true);
-        
+
         // Generate a new session ID if we don't already have one
         // This will help track when we're continuing the same session vs starting a new one
         if (!sessionIdRef.current) {
           sessionIdRef.current = Date.now();
         }
-        
+
         // If this is a fresh start (not a pause/resume), reset the start time and session duration
         if (!startTimeRef.current) {
           startTimeRef.current = new Date();
           currentSessionDurationRef.current = 0;
         }
-        
+
         // Start timer to track listening time
         if (timerRef.current) clearInterval(timerRef.current);
         timerRef.current = setInterval(() => {
@@ -178,15 +179,18 @@ function App() {
                 totalMinutes: 0,
                 sessionCount: 0,
               };
-              
+
               // Calculate the current session duration
               const now = new Date();
-              const currentSessionDuration = startTimeRef.current ? 
-                parseFloat(((now - startTimeRef.current) / (1000 * 60)).toFixed(2)) : 0;
-              
+              const currentSessionDuration = startTimeRef.current
+                ? parseFloat(
+                    ((now - startTimeRef.current) / (1000 * 60)).toFixed(2)
+                  )
+                : 0;
+
               // Store the current duration for later use when the session ends
               currentSessionDurationRef.current = currentSessionDuration;
-              
+
               // Only update the total minutes, don't modify session count yet
               return {
                 ...prev,
@@ -293,13 +297,13 @@ function App() {
     // Function to increment session count for a soundscape when button is clicked
     window.incrementSessionCount = (soundKey) => {
       if (!soundKey) return;
-      
+
       setListeningPreferences((prev) => {
         const soundData = prev[soundKey] || {
           totalMinutes: 0,
           sessionCount: 0,
         };
-        
+
         return {
           ...prev,
           [soundKey]: {
@@ -308,10 +312,10 @@ function App() {
           },
         };
       });
-      
+
       console.log(`Button clicked: session count incremented for ${soundKey}`);
     };
-    
+
     // Clean up the global function when component unmounts
     return () => {
       delete window.incrementSessionCount;
@@ -329,7 +333,7 @@ function App() {
       setCurrentPlaylist(null);
       setCurrentPlaylistIndex(0);
     };
-    
+
     // Handle the smart-mix-transition event to update listening time only
     // Session count increments are now handled directly in Home.jsx when sounds are selected
     const handleSmartMixTransition = (event) => {
@@ -339,14 +343,14 @@ function App() {
         const listenedMinutes = parseFloat(
           ((endTime - startTimeRef.current) / (1000 * 60)).toFixed(2)
         );
-        
+
         // Only update total time - session count is incremented when buttons are clicked
         setListeningPreferences((prev) => {
           const soundData = prev[soundKey] || {
             totalMinutes: 0,
             sessionCount: 0,
           };
-          
+
           return {
             ...prev,
             [soundKey]: {
@@ -358,9 +362,9 @@ function App() {
             },
           };
         });
-        
+
         console.log(`Smart Mix transition: updated time for ${soundKey}`);
-        
+
         // Reset for the next sound
         startTimeRef.current = new Date();
         currentSessionDurationRef.current = 0;
@@ -374,7 +378,10 @@ function App() {
     return () => {
       window.removeEventListener("playlist-change", handlePlaylistChange);
       window.removeEventListener("playlist-stop", handlePlaylistStop);
-      window.removeEventListener("smart-mix-transition", handleSmartMixTransition);
+      window.removeEventListener(
+        "smart-mix-transition",
+        handleSmartMixTransition
+      );
     };
   }, []);
 
@@ -382,20 +389,25 @@ function App() {
     const audio = audioRef.current || document.getElementById("player");
 
     // Track the previous sound's total time only
-    if (audioPlaying && currentSoundRef.current && startTimeRef.current && audio.src !== url) {
+    if (
+      audioPlaying &&
+      currentSoundRef.current &&
+      startTimeRef.current &&
+      audio.src !== url
+    ) {
       const soundKey = currentSoundRef.current;
       const endTime = new Date();
       const listenedMinutes = parseFloat(
         ((endTime - startTimeRef.current) / (1000 * 60)).toFixed(2)
       );
-      
+
       // Only update total time, session count is handled on button click in Home.jsx
       setListeningPreferences((prev) => {
         const soundData = prev[soundKey] || {
           totalMinutes: 0,
           sessionCount: 0,
         };
-        
+
         return {
           ...prev,
           [soundKey]: {
@@ -406,7 +418,7 @@ function App() {
           },
         };
       });
-      
+
       // Reset session tracking for the new sound
       startTimeRef.current = new Date();
       currentSessionDurationRef.current = 0;
@@ -418,14 +430,14 @@ function App() {
     } else {
       // Set loading state to true when starting to load a new audio
       setAudioLoading(true);
-      
+
       // Set up new audio source
       audio.src = url;
       audio.title = name;
       audio.setAttribute("image", image);
       audio.setAttribute("index", index);
       setCurrentURL(url);
-      
+
       // Note: Session count is now incremented in Home.jsx when the button is clicked
       // We no longer increment session count here
 
@@ -622,6 +634,21 @@ function App() {
                       <span>Credits</span>
                     </NavLink>
                   </SidebarMenuButton>
+                </SidebarMenuItem>
+                <SidebarMenuItem key={"github"}>
+                  <a
+                    href="https://github.com/thingbomb/noisefill"
+                    rel="noopener noreferrer"
+                    onMouseDown={(e) => {
+                      e.preventDefault();
+                      e.target.click();
+                    }}
+                  >
+                    <SidebarMenuButton className="text-gray-300 hover:text-white">
+                      <Github className="size-4" />
+                      <span>GitHub</span>
+                    </SidebarMenuButton>
+                  </a>
                 </SidebarMenuItem>
               </SidebarMenu>
             </SidebarGroupContent>
