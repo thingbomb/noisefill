@@ -36,7 +36,7 @@ import { SiteHeader } from "./components/SiteHeader";
 import { NavLink } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { soundscapes } from "./soundscapes";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import audioRef from "./audioRef";
 import { SkipForward } from "lucide-react";
 import { Button } from "./components/ui/button";
@@ -73,11 +73,74 @@ function App() {
   const [audioTitle, setAudioTitle] = useState("");
   const [audioLoading, setAudioLoading] = useState(false);
 
+  // State for tracking listening preferences
+  const [listeningPreferences, setListeningPreferences] = useState({});
+  const currentSoundRef = useRef(null);
+  const timerRef = useRef(null);
+  const startTimeRef = useRef(null);
+  const currentSessionDurationRef = useRef(0);
+  const sessionIdRef = useRef(null); // New ref to track unique session IDs
+
+  // Load listening preferences from localStorage on component mount
+  useEffect(() => {
+    try {
+      const savedPreferences = localStorage.getItem("listeningPreferences");
+      if (savedPreferences) {
+        const parsedPrefs = JSON.parse(savedPreferences);
+          
+        // Convert any existing data to the new format (totalMinutes + sessionCount)
+        const updatedPrefs = {};
+          
+        Object.entries(parsedPrefs).forEach(([key, data]) => {
+          // If the old format has listeningSessions array, convert to sessionCount
+          if (data.listeningSessions) {
+            updatedPrefs[key] = {
+              totalMinutes: data.totalMinutes || 0,
+              sessionCount: data.listeningSessions.length || 0,
+            };
+          } else {
+            // Already in new format or unknown format
+            updatedPrefs[key] = {
+              totalMinutes: data.totalMinutes || 0,
+              sessionCount: data.sessionCount || 0,
+            };
+          }
+        });
+          
+        setListeningPreferences(updatedPrefs);
+      }
+    } catch (error) {
+      console.error("Error loading listening preferences:", error);
+    }
+  }, []);
+
+  // Save listening preferences to localStorage whenever they change
+  useEffect(() => {
+    try {
+      if (Object.keys(listeningPreferences).length > 0) {
+        localStorage.setItem(
+          "listeningPreferences",
+          JSON.stringify(listeningPreferences)
+        );
+
+        // Send event to sync listening preferences with Home component
+        window.dispatchEvent(
+          new CustomEvent("listening-preferences-update", {
+            detail: { listeningPreferences },
+          })
+        );
+      }
+    } catch (error) {
+      console.error("Error saving listening preferences:", error);
+    }
+  }, [listeningPreferences]);
+
   useEffect(() => {
     const audio = audioRef.current || document.getElementById("player");
     const handleTitleChange = (passedTitle) => {
       if (!passedTitle) return;
       setAudioTitle(passedTitle);
+      currentSoundRef.current = passedTitle.toLowerCase().replace(/\s+/g, "-");
     };
 
     if (audio) {
@@ -86,8 +149,97 @@ function App() {
       handleTitleChange(audio.title);
 
       // Event listeners for play/pause state
-      const handlePlay = () => setAudioPlaying(true);
-      const handlePause = () => setAudioPlaying(false);
+      const handlePlay = () => {
+        setAudioPlaying(true);
+        
+        // Generate a new session ID if we don't already have one
+        // This will help track when we're continuing the same session vs starting a new one
+        if (!sessionIdRef.current) {
+          sessionIdRef.current = Date.now();
+        }
+        
+        // If this is a fresh start (not a pause/resume), reset the start time and session duration
+        if (!startTimeRef.current) {
+          startTimeRef.current = new Date();
+          currentSessionDurationRef.current = 0;
+        }
+        
+        // Start timer to track listening time
+        if (timerRef.current) clearInterval(timerRef.current);
+        timerRef.current = setInterval(() => {
+          if (currentSoundRef.current) {
+            const soundKey = currentSoundRef.current;
+            currentSessionDurationRef.current += 1 / 60; // Track session duration in minutes
+
+            // Update listening preferences - only update total minutes while playing
+            // We'll record the session when the sound changes or stops
+            setListeningPreferences((prev) => {
+              const soundData = prev[soundKey] || {
+                totalMinutes: 0,
+                sessionCount: 0,
+              };
+              
+              // Calculate the current session duration
+              const now = new Date();
+              const currentSessionDuration = startTimeRef.current ? 
+                parseFloat(((now - startTimeRef.current) / (1000 * 60)).toFixed(2)) : 0;
+              
+              // Store the current duration for later use when the session ends
+              currentSessionDurationRef.current = currentSessionDuration;
+              
+              // Only update the total minutes, don't modify session count yet
+              return {
+                ...prev,
+                [soundKey]: {
+                  ...soundData,
+                  totalMinutes: parseFloat(
+                    (soundData.totalMinutes + 1 / 60).toFixed(2)
+                  ), // Add 1/60 minutes (1 second)
+                },
+              };
+            });
+          }
+        }, 1000); // Update every second
+      };
+
+      const handlePause = () => {
+        setAudioPlaying(false);
+        // Stop the timer when audio is paused
+        if (timerRef.current) {
+          clearInterval(timerRef.current);
+          timerRef.current = null;
+        }
+
+        // Update total listening time when audio is paused, but don't add a new session
+        if (currentSoundRef.current && startTimeRef.current) {
+          const soundKey = currentSoundRef.current;
+          const endTime = new Date();
+          const listenedMinutes = parseFloat(
+            ((endTime - startTimeRef.current) / (1000 * 60)).toFixed(2)
+          );
+
+          // Only update the total minutes, don't add a new session entry
+          setListeningPreferences((prev) => {
+            const soundData = prev[soundKey] || {
+              totalMinutes: 0,
+              sessionCount: 0,
+            };
+            return {
+              ...prev,
+              [soundKey]: {
+                ...soundData,
+                totalMinutes: parseFloat(
+                  (soundData.totalMinutes + listenedMinutes).toFixed(2)
+                ),
+                // Keep the session count unchanged during pauses
+              },
+            };
+          });
+
+          // We don't reset currentSessionDurationRef or startTimeRef here
+          // This allows the session to continue if play is pressed again
+        }
+      };
 
       // Event listeners for loading state
       const handleLoadStart = () => setAudioLoading(true);
@@ -122,6 +274,12 @@ function App() {
         audio.removeEventListener("canplay", handleCanPlay);
         audio.removeEventListener("error", handleError);
         observer.disconnect();
+
+        // Clean up timer on component unmount
+        if (timerRef.current) {
+          clearInterval(timerRef.current);
+          timerRef.current = null;
+        }
       };
     }
   }, []);
@@ -129,6 +287,36 @@ function App() {
   // Add state to track if we're in a playlist
   const [currentPlaylist, setCurrentPlaylist] = useState(null);
   const [currentPlaylistIndex, setCurrentPlaylistIndex] = useState(0);
+
+  // Create a global function to increment session count when a button is clicked
+  useEffect(() => {
+    // Function to increment session count for a soundscape when button is clicked
+    window.incrementSessionCount = (soundKey) => {
+      if (!soundKey) return;
+      
+      setListeningPreferences((prev) => {
+        const soundData = prev[soundKey] || {
+          totalMinutes: 0,
+          sessionCount: 0,
+        };
+        
+        return {
+          ...prev,
+          [soundKey]: {
+            totalMinutes: soundData.totalMinutes,
+            sessionCount: soundData.sessionCount + 1, // Increment immediately on button click
+          },
+        };
+      });
+      
+      console.log(`Button clicked: session count incremented for ${soundKey}`);
+    };
+    
+    // Clean up the global function when component unmounts
+    return () => {
+      delete window.incrementSessionCount;
+    };
+  }, []);
 
   // Listen for custom events from Home component to sync playlist state
   useEffect(() => {
@@ -141,31 +329,105 @@ function App() {
       setCurrentPlaylist(null);
       setCurrentPlaylistIndex(0);
     };
+    
+    // Handle the smart-mix-transition event to update listening time only
+    // Session count increments are now handled directly in Home.jsx when sounds are selected
+    const handleSmartMixTransition = (event) => {
+      if (currentSoundRef.current && startTimeRef.current) {
+        const soundKey = currentSoundRef.current;
+        const endTime = new Date();
+        const listenedMinutes = parseFloat(
+          ((endTime - startTimeRef.current) / (1000 * 60)).toFixed(2)
+        );
+        
+        // Only update total time - session count is incremented when buttons are clicked
+        setListeningPreferences((prev) => {
+          const soundData = prev[soundKey] || {
+            totalMinutes: 0,
+            sessionCount: 0,
+          };
+          
+          return {
+            ...prev,
+            [soundKey]: {
+              totalMinutes: parseFloat(
+                (soundData.totalMinutes + listenedMinutes).toFixed(2)
+              ),
+              // Don't increment session count here - it's done when a button is clicked
+              sessionCount: soundData.sessionCount,
+            },
+          };
+        });
+        
+        console.log(`Smart Mix transition: updated time for ${soundKey}`);
+        
+        // Reset for the next sound
+        startTimeRef.current = new Date();
+        currentSessionDurationRef.current = 0;
+      }
+    };
 
     window.addEventListener("playlist-change", handlePlaylistChange);
     window.addEventListener("playlist-stop", handlePlaylistStop);
+    window.addEventListener("smart-mix-transition", handleSmartMixTransition);
 
     return () => {
       window.removeEventListener("playlist-change", handlePlaylistChange);
       window.removeEventListener("playlist-stop", handlePlaylistStop);
+      window.removeEventListener("smart-mix-transition", handleSmartMixTransition);
     };
   }, []);
 
   const playSound = (url, volume, name, image, index) => {
     const audio = audioRef.current || document.getElementById("player");
+
+    // Track the previous sound's total time only
+    if (audioPlaying && currentSoundRef.current && startTimeRef.current && audio.src !== url) {
+      const soundKey = currentSoundRef.current;
+      const endTime = new Date();
+      const listenedMinutes = parseFloat(
+        ((endTime - startTimeRef.current) / (1000 * 60)).toFixed(2)
+      );
+      
+      // Only update total time, session count is handled on button click in Home.jsx
+      setListeningPreferences((prev) => {
+        const soundData = prev[soundKey] || {
+          totalMinutes: 0,
+          sessionCount: 0,
+        };
+        
+        return {
+          ...prev,
+          [soundKey]: {
+            totalMinutes: parseFloat(
+              (soundData.totalMinutes + listenedMinutes).toFixed(2)
+            ),
+            sessionCount: soundData.sessionCount, // Not incrementing session count here
+          },
+        };
+      });
+      
+      // Reset session tracking for the new sound
+      startTimeRef.current = new Date();
+      currentSessionDurationRef.current = 0;
+    }
+
     if (audio.src === url && audioPlaying) {
       audio.pause();
       return;
     } else {
       // Set loading state to true when starting to load a new audio
       setAudioLoading(true);
-
+      
       // Set up new audio source
       audio.src = url;
       audio.title = name;
       audio.setAttribute("image", image);
       audio.setAttribute("index", index);
       setCurrentURL(url);
+      
+      // Note: Session count is now incremented in Home.jsx when the button is clicked
+      // We no longer increment session count here
 
       // Find the corresponding soundscape to get the volume
       const soundscape = soundscapes.find((s) => s.url === url);

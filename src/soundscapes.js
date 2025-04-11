@@ -198,6 +198,7 @@ let soundscapes = [
     attribution: [
       "Cute Lofi Instrumental by Seth_Makes_Sounds -- https://freesound.org/s/660390/ -- License: Creative Commons 0",
     ],
+    reversedURL: "https://cdn.noisefill.com/ReversedClassic.flac",
     index: 15,
     categories: ["upbeat", "focus"],
   },
