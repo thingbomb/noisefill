@@ -258,6 +258,19 @@ let soundscapes = [
     index: 19,
     categories: ["upbeat", "focus"],
   },
+  {
+    name: "Uplifting lofi",
+    emoji: "🌻",
+    url: "https://cdn.noisefill.com/uplifting.mp3",
+    volume: 1,
+    image: "https://cdn.noisefill.com/uplifting.jpg",
+    attribution: [
+      "Lofi - keepin the pace.wav by noel0319 -- https://freesound.org/s/680399/ -- License: Creative Commons 0",
+    ],
+    reversedURL: "https://cdn.noisefill.com/reversed-uplifting.mp3",
+    index: 20,
+    categories: ["upbeat", "focus", "relax"],
+  },
 ];
 
 export const savePlaylist = (name, description, items, existingId = null) => {
