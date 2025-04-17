@@ -793,7 +793,11 @@ function Home({ currentURL, setCurrentURL }) {
 
   useEffect(() => {
     if (window.location.pathname === "/") {
-      document.title = "Noisefill";
+      document.title = `${
+        new URL(window.location.href).hostname.startsWith("reversed.")
+          ? "Reversed Noisefill"
+          : "Noisefill"
+      }`;
     }
   }, []);
 
