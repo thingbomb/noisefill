@@ -10,7 +10,6 @@ import BrownNoise from "./pages/BrownNoise";
 import Privacy from "./pages/Privacy";
 import Support from "./pages/Support";
 import Podcasts from "./pages/Podcasts";
-import Embed from "./pages/Embed";
 import Credits from "./pages/Credits";
 import {
   Sidebar,
@@ -58,7 +57,6 @@ const pathmap = {
   "/pink-noise": "Pink Noise",
   "/brown-noise": "Brown Noise",
   "/podcasts": "Podcasts",
-  "/embed": "Embed",
   "/privacy": "Privacy",
   "/support": "Support",
   "/settings": "Settings",
@@ -667,7 +665,6 @@ function App() {
                   <Home currentURL={currentURL} setCurrentURL={setCurrentURL} />
                 }
               />
-              <Route path="/embed" element={<Embed />} />
               <Route path="/white-noise" element={<WhiteNoise />} />
               <Route path="/pink-noise" element={<PinkNoise />} />
               <Route path="/brown-noise" element={<BrownNoise />} />
