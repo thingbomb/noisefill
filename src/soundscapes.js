@@ -142,6 +142,19 @@ let soundscapes = [
     categories: ["sleep", "chill", "ambience", "relax"],
   },
   {
+    name: "Seagulls",
+    emoji: "🐦",
+    url: "https://cdn.noisefill.com/Seagulls.mp3",
+    volume: 1,
+    image: "https://cdn.noisefill.com/Seagulls.jpg",
+    attribution: [
+      "Harbour_Seagulls_Day_2.WAV by ivolipa -- https://freesound.org/s/328807/ -- License: Creative Commons 0",
+    ],
+    reversedURL: "https://cdn.noisefill.com/reversed-seagulls.mp3",
+    index: 11,
+    categories: ["natural", "nature"],
+  },
+  {
     name: "Groovy lofi",
     emoji: "🎸",
     url: "https://cdn.noisefill.com/655615__seth_makes_sounds__happy-hip-hop-beat.flac",
@@ -151,7 +164,7 @@ let soundscapes = [
       "Happy Hip Hop Beat by Seth_Makes_Sounds -- https://freesound.org/s/655615/ -- License: Creative Commons 0",
     ],
     reversedURL: "https://cdn.noisefill.com/ReversedGroovy.flac",
-    index: 11,
+    index: 12,
     categories: ["focus"],
   },
   {
@@ -164,7 +177,7 @@ let soundscapes = [
       "Lofi Guitar Beat 70bpm by Seth_Makes_Sounds -- https://freesound.org/s/659278/ -- License: Creative Commons 0",
     ],
     reversedURL: "https://cdn.noisefill.com/ReversedUpbeat.mp3",
-    index: 12,
+    index: 13,
     categories: ["focus", "chill", "relax"],
   },
   {
@@ -177,7 +190,7 @@ let soundscapes = [
       "Chill Lofi - lost stars.wav by noel0319 -- https://freesound.org/s/680400/ -- License: Creative Commons 0",
     ],
     reversedURL: "https://cdn.noisefill.com/ReversedChill.mp3",
-    index: 13,
+    index: 14,
     categories: ["focus", "chill", "relax"],
   },
   {
@@ -190,7 +203,7 @@ let soundscapes = [
       "Lofi Fusion Background Music by Seth_Makes_Sounds -- https://freesound.org/s/655516/ -- License: Creative Commons 0",
     ],
     reversedURL: "https://cdn.noisefill.com/ReversedRetro.flac",
-    index: 14,
+    index: 15,
     categories: ["focus", "chill", "relax"],
   },
   {
@@ -203,7 +216,7 @@ let soundscapes = [
       "Cute Lofi Instrumental by Seth_Makes_Sounds -- https://freesound.org/s/660390/ -- License: Creative Commons 0",
     ],
     reversedURL: "https://cdn.noisefill.com/ReversedClassic.flac",
-    index: 15,
+    index: 16,
     categories: ["upbeat", "focus"],
   },
   {
@@ -216,7 +229,7 @@ let soundscapes = [
       "Chill Lofi Piano Beat by Seth_Makes_Sounds -- https://freesound.org/s/709779/ -- License: Creative Commons 0",
     ],
     reversedURL: "https://cdn.noisefill.com/ReversedPiano.flac",
-    index: 16,
+    index: 17,
     categories: ["upbeat", "focus", "relax"],
   },
   {
@@ -229,7 +242,7 @@ let soundscapes = [
       "Tranquil Lofi Beat by Seth_Makes_Sounds -- https://freesound.org/s/688285/ -- License: Creative Commons 0",
     ],
     reversedURL: "https://cdn.noisefill.com/ReversedRising.flac",
-    index: 17,
+    index: 18,
     categories: ["upbeat", "focus", "relax"],
   },
   {
@@ -242,7 +255,7 @@ let soundscapes = [
       "Vanilla Lofi Beat by Seth_Makes_Sounds -- https://freesound.org/s/691510/ -- License: Creative Commons 0",
     ],
     reversedURL: "https://cdn.noisefill.com/ReversedDeep.flac",
-    index: 18,
+    index: 19,
     categories: ["upbeat", "focus"],
   },
   {
@@ -255,7 +268,7 @@ let soundscapes = [
       "Good Vibe Background Music by Seth_Makes_Sounds -- https://freesound.org/s/661782/ -- License: Creative Commons 0",
     ],
     reversedURL: "https://cdn.noisefill.com/ReversedVibe.flac",
-    index: 19,
+    index: 20,
     categories: ["upbeat", "focus"],
   },
   {
@@ -268,7 +281,7 @@ let soundscapes = [
       "Lofi - keepin the pace.wav by noel0319 -- https://freesound.org/s/680399/ -- License: Creative Commons 0",
     ],
     reversedURL: "https://cdn.noisefill.com/reversed-uplifting.mp3",
-    index: 20,
+    index: 21,
     categories: ["upbeat", "focus", "relax"],
   },
   {
@@ -281,7 +294,7 @@ let soundscapes = [
       "Lo-Fi - Morning Breeze by noel0319 -- https://freesound.org/s/678119/ -- License: Creative Commons 0",
     ],
     reversedURL: "https://cdn.noisefill.com/reversed-morning.mp3",
-    index: 21,
+    index: 22,
     categories: ["upbeat", "focus", "relax"],
   },
 ];
