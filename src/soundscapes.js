@@ -271,6 +271,19 @@ let soundscapes = [
     index: 20,
     categories: ["upbeat", "focus", "relax"],
   },
+  {
+    name: "Morning lofi",
+    emoji: "🌅",
+    url: "https://cdn.noisefill.com/Morning.mp3",
+    volume: 1,
+    image: "https://cdn.noisefill.com/morning.jpg",
+    attribution: [
+      "Lo-Fi - Morning Breeze by noel0319 -- https://freesound.org/s/678119/ -- License: Creative Commons 0",
+    ],
+    reversedURL: "https://cdn.noisefill.com/reversed-morning.mp3",
+    index: 21,
+    categories: ["upbeat", "focus", "relax"],
+  },
 ];
 
 export const savePlaylist = (name, description, items, existingId = null) => {
