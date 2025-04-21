@@ -21,6 +21,10 @@ import {
 import audioRef from "../audioRef";
 import { Link } from "react-router-dom";
 import { cn } from "../components/lib/utils";
+import {
+  saveAudioToIndexedDB,
+  getAudioFromIndexedDB,
+} from "../utils/indexedDB";
 
 function SleepTimer() {
   const [duration, setDuration] = useState(0);
@@ -156,6 +160,9 @@ function Home({ currentURL, setCurrentURL }) {
   const [playlistTimer, setPlaylistTimer] = useState(null);
   const [editingPlaylist, setEditingPlaylist] = useState(null);
 
+  const [isOnline, setIsOnline] = useState(navigator.onLine);
+  const [cachedSoundscapes, setCachedSoundscapes] = useState([]);
+
   // Smart Mix state
   const [isSmartMixActive, setIsSmartMixActive] = useState(false);
   const [listeningPreferences, setListeningPreferences] = useState({});
@@ -186,6 +193,54 @@ function Home({ currentURL, setCurrentURL }) {
   useEffect(() => {
     checkEligibleSounds();
   }, [listeningPreferences, checkEligibleSounds]);
+
+  useEffect(() => {
+    const handleOnline = () => {
+      console.log("Network connection restored");
+      setIsOnline(true);
+      setMessage("You are back online");
+      setTimeout(() => setMessage(""), 3000);
+    };
+
+    const handleOffline = () => {
+      console.log("Network connection lost");
+      setIsOnline(false);
+      setMessage("You are offline - only cached sounds are available");
+    };
+
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
+
+    return () => {
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
+    };
+  }, []);
+
+  useEffect(() => {
+    async function checkCachedSoundscapes() {
+      const cachedIds = [];
+
+      for (const soundscape of soundscapes) {
+        try {
+          const dataUrl = await getAudioFromIndexedDB(soundscape.index);
+          if (dataUrl) {
+            cachedIds.push(soundscape.index);
+          }
+        } catch (error) {
+          console.error(
+            `Error checking cache for soundscape ${soundscape.index}:`,
+            error
+          );
+        }
+      }
+
+      setCachedSoundscapes(cachedIds);
+      console.log("Cached soundscapes:", cachedIds);
+    }
+
+    checkCachedSoundscapes();
+  }, [isOnline]);
 
   useEffect(() => {
     const handlePreferencesUpdate = (event) => {
@@ -591,14 +646,15 @@ function Home({ currentURL, setCurrentURL }) {
   }, [currentPlaylist, playlistTimer]);
 
   const handleAddToPlaylist = (soundscape) => {
-    if (
-      playlistItems.some((item) => item.soundscapeIndex === soundscape.index)
-    ) {
+    if (playlistItems.some((item) => item.index === soundscape.index)) {
       return;
     }
     setPlaylistItems([
       ...playlistItems,
-      { soundscapeIndex: soundscape.index, duration: 5 },
+      {
+        index: soundscape.index,
+        duration: 5,
+      },
     ]);
   };
 
@@ -661,7 +717,7 @@ function Home({ currentURL, setCurrentURL }) {
     audioRef.current.volume = soundscape.volume || 1.0;
   };
 
-  const playSound = (url, volume, name, image, index) => {
+  const playSound = async (url, volume, name, image, index) => {
     const audio = audioRef.current || document.getElementById("player");
 
     // If smart mix is active and this is a manual sound change, stop the smart mix
@@ -677,52 +733,104 @@ function Home({ currentURL, setCurrentURL }) {
     if (isSameSound && isCurrentlyPlaying) {
       audio.pause();
       return;
-    } else {
-      // Extract the soundKey from the URL or name
-      const soundName = name.toLowerCase().replace(/\s+/g, "-");
-
-      // Increment the session count right when a new sound is selected to play
-      // This happens at the moment of clicking, before changing the audio source
-      if (!isSameSound) {
-        window.incrementSessionCount?.(soundName);
-        console.log(
-          `Button clicked: incrementing session count for ${soundName}`
-        );
-      }
-
-      // Set up new audio source
-      audio.src = url;
-      audio.title = name;
-      audio.setAttribute("image", image);
-      audio.setAttribute("index", index);
-      setCurrentURL(url);
-
-      // Find the corresponding soundscape to get the volume
-      const soundscape = soundscapes.find((s) => s.url === url);
-      if (soundscape) {
-        // Set volume directly from the soundscape
-        audio.volume = soundscape.volume || 1.0;
-      } else {
-        // Fallback volume
-        audio.volume = volume || 1.0;
-      }
-
-      // Play the audio
-      audio.play();
     }
-  };
 
-  const playPlaylist = (playlist) => {
-    setCurrentPlaylist(playlist);
-    setCurrentPlaylistIndex(0);
-    playPlaylistItem(playlist, 0);
+    // Extract the soundKey from the URL or name
+    const soundName = name.toLowerCase().replace(/\s+/g, "-");
 
-    // Dispatch event to notify App component about playlist change
-    window.dispatchEvent(
-      new CustomEvent("playlist-change", {
-        detail: { playlist, index: 0 },
-      })
-    );
+    // Increment the session count right when a new sound is selected to play
+    if (!isSameSound) {
+      window.incrementSessionCount?.(soundName);
+      console.log(
+        `Button clicked: incrementing session count for ${soundName}`
+      );
+    }
+
+    const soundscape = soundscapes.find((s) => s.url === url);
+    const soundscapeId = soundscape ? soundscape.index : index;
+
+    const playFromCache = async () => {
+      try {
+        const cachedDataUrl = await getAudioFromIndexedDB(soundscapeId);
+        if (cachedDataUrl) {
+          console.log(`Playing from cache for soundscape ID: ${soundscapeId}`);
+          audio.src = cachedDataUrl;
+          audio.title = name;
+          audio.setAttribute("image", image);
+          audio.setAttribute("index", soundscapeId);
+          setCurrentURL(cachedDataUrl);
+          audio.volume = soundscape ? soundscape.volume || 1.0 : volume || 1.0;
+
+          return audio
+            .play()
+            .then(() => {
+              setMessage(`Playing cached version of: ${name}`);
+              return true;
+            })
+            .catch((err) => {
+              console.error("Error playing cached audio:", err);
+              setMessage("Failed to play cached audio");
+              return false;
+            });
+        }
+        return false;
+      } catch (error) {
+        console.error("Error accessing cached audio:", error);
+        return false;
+      }
+    };
+
+    const handleAudioError = async (e) => {
+      console.error(`Error loading audio from URL: ${url}`, e);
+      setMessage("Network error: Attempting to load from cache...");
+      audio.removeEventListener("error", handleAudioError);
+
+      const playedFromCache = await playFromCache();
+
+      if (!playedFromCache) {
+        setMessage(`Network error: No cached version available for ${name}`);
+      }
+    };
+
+    if (!isOnline && cachedSoundscapes.includes(soundscapeId)) {
+      void playFromCache();
+      return;
+    }
+
+    audio.addEventListener("error", handleAudioError);
+
+    audio.src = url;
+    audio.title = name;
+    audio.setAttribute("image", image);
+    audio.setAttribute("index", soundscapeId);
+    setCurrentURL(url);
+
+    if (soundscape) {
+      // Set volume directly from the soundscape
+      audio.volume = soundscape.volume || 1.0;
+
+      // Save the audio data URL to IndexedDB when online
+      if (isOnline) {
+        saveAudioToIndexedDB(soundscape.index, url)
+          .then(() => {
+            // Update cached soundscapes list if this is newly cached
+            if (!cachedSoundscapes.includes(soundscape.index)) {
+              setCachedSoundscapes((prev) => [...prev, soundscape.index]);
+            }
+          })
+          .catch((error) => {
+            console.error("Error saving audio data URL to IndexedDB:", error);
+          });
+      }
+    } else {
+      // Fallback volume
+      audio.volume = volume || 1.0;
+    }
+
+    // Play the audio
+    audio.play().catch((error) => {
+      console.error("Error playing audio:", error);
+    });
   };
 
   const playPlaylistItem = (playlist, index) => {
@@ -732,21 +840,131 @@ function Home({ currentURL, setCurrentURL }) {
     }
 
     const item = playlist.items[index];
-    const soundscape = soundscapes[item.soundscapeIndex];
+    const soundscapeIndex = item.index;
+    const soundscape = soundscapes[soundscapeIndex];
+
+    if (!soundscape) {
+      console.error(`Soundscape with index ${soundscapeIndex} not found`);
+      setTimeout(() => {
+        playPlaylistItem(playlist, index + 1);
+      }, 1000);
+      return;
+    }
 
     const audio = audioRef.current || document.getElementById("player");
+
+    const playFromCache = async () => {
+      try {
+        const cachedDataUrl = await getAudioFromIndexedDB(soundscapeIndex);
+        if (cachedDataUrl) {
+          console.log(
+            `Playing playlist item from cache, soundscape ID: ${soundscapeIndex}`
+          );
+          audio.src = cachedDataUrl;
+          audio.title = soundscape.name;
+          audio.setAttribute("image", soundscape.image);
+          audio.setAttribute("index", soundscapeIndex);
+          audio.volume = soundscape.volume || 1.0;
+          setCurrentURL(cachedDataUrl);
+          setPlaying(true);
+
+          return audio
+            .play()
+            .then(() => {
+              setMessage(
+                `Playing cached version of: ${soundscape.name} (Playlist: ${playlist.name})`
+              );
+
+              setCurrentPlaylist(playlist);
+              setCurrentPlaylistIndex(index);
+
+              window.dispatchEvent(
+                new CustomEvent("playlist-change", {
+                  detail: { playlist, index },
+                })
+              );
+
+              const minutes = parseInt(item.duration);
+              clearTimeout(playlistTimer);
+              const timer = setTimeout(() => {
+                playPlaylistItem(playlist, index + 1);
+              }, minutes * 60 * 1000);
+
+              setPlaylistTimer(timer);
+              return true;
+            })
+            .catch((err) => {
+              console.error("Error playing cached playlist audio:", err);
+              setMessage("Failed to play cached playlist audio");
+
+              setTimeout(() => {
+                playPlaylistItem(playlist, index + 1);
+              }, 2000);
+              return false;
+            });
+        }
+        return false;
+      } catch (error) {
+        console.error("Error accessing cached playlist audio:", error);
+        return false;
+      }
+    };
+
+    const handleAudioError = async (e) => {
+      console.error(
+        `Error loading playlist audio from URL: ${soundscape.url}`,
+        e
+      );
+      setMessage(
+        "Network error: Attempting to load playlist item from cache..."
+      );
+
+      audio.removeEventListener("error", handleAudioError);
+
+      const playedFromCache = await playFromCache();
+
+      if (!playedFromCache) {
+        setMessage(
+          `Network error: No cached version available for ${soundscape.name}`
+        );
+
+        setTimeout(() => {
+          playPlaylistItem(playlist, index + 1);
+        }, 2000);
+      }
+    };
+
+    if (!isOnline && cachedSoundscapes.includes(soundscapeIndex)) {
+      void playFromCache();
+      return;
+    }
+
+    audio.addEventListener("error", handleAudioError);
+
     audio.src = soundscape.url;
-    // Set all necessary attributes for the media bar to update properly
     audio.title = soundscape.name;
     audio.setAttribute("image", soundscape.image);
-    audio.setAttribute("index", soundscape.index);
-    // Set volume directly from soundscape
+    audio.setAttribute("index", soundscapeIndex);
     audio.volume = soundscape.volume || 1.0;
     setCurrentURL(soundscape.url);
     setPlaying(true);
 
+    if (isOnline) {
+      saveAudioToIndexedDB(soundscapeIndex, soundscape.url)
+        .then(() => {
+          if (!cachedSoundscapes.includes(soundscapeIndex)) {
+            setCachedSoundscapes((prev) => [...prev, soundscapeIndex]);
+          }
+        })
+        .catch((error) => {
+          console.error("Error saving audio data URL to IndexedDB:", error);
+        });
+    }
+
     // Play the audio
-    audio.play();
+    audio.play().catch((error) => {
+      console.error("Error playing playlist audio:", error);
+    });
 
     // Set message
     setMessage(
@@ -852,48 +1070,69 @@ function Home({ currentURL, setCurrentURL }) {
             }
             return true;
           })
-          .map((sound, index) => (
-            <Button
-              variant="outline"
-              key={index}
-              onMouseDown={(event) => {
-                const soundURL = new URL(
-                  window.location.href
-                ).hostname.startsWith("reversed.")
-                  ? sound.reversedURL
-                  : sound.url;
-                playSound(
-                  soundURL,
-                  sound.volume,
-                  sound.name,
-                  sound.image,
-                  sound.index
-                );
-                event.target.mouseDownHandled = true;
-              }}
-              onClick={(event) => {
-                if (event.target.mouseDownHandled) {
-                  event.target.mouseDownHandled = false;
-                  return;
-                }
-                playSound(
-                  sound.url,
-                  sound.volume,
-                  sound.name,
-                  sound.image,
-                  sound.index
-                );
-              }}
-            >
-              {sound.emoji} {sound.name}{" "}
-            </Button>
-          ))}
+          .map((sound, index) => {
+            const isDisabled =
+              !isOnline && !cachedSoundscapes.includes(sound.index);
+
+            return (
+              <Button
+                variant="outline"
+                key={index}
+                disabled={isDisabled}
+                className={cn({
+                  "opacity-40 cursor-not-allowed": isDisabled,
+                })}
+                title={isDisabled ? "Not available offline" : undefined}
+                onMouseDown={(event) => {
+                  if (isDisabled) return;
+
+                  const soundURL = new URL(
+                    window.location.href
+                  ).hostname.startsWith("reversed.")
+                    ? sound.reversedURL
+                    : sound.url;
+                  playSound(
+                    soundURL,
+                    sound.volume,
+                    sound.name,
+                    sound.image,
+                    sound.index
+                  );
+                  event.target.mouseDownHandled = true;
+                }}
+                onClick={(event) => {
+                  if (isDisabled) return;
+
+                  if (event.target.mouseDownHandled) {
+                    event.target.mouseDownHandled = false;
+                    return;
+                  }
+                  playSound(
+                    sound.url,
+                    sound.volume,
+                    sound.name,
+                    sound.image,
+                    sound.index
+                  );
+                }}
+              >
+                {sound.emoji} {sound.name}{" "}
+              </Button>
+            );
+          })}
         <SleepTimer />
       </div>
       <br />
       <div className="flex flex-col gap-2">
         <div className="flex justify-between items-center">
-          <h1 className="text-xl font-semibold">Playlists</h1>
+          <div className="flex items-center gap-2">
+            <h1 className="text-xl font-semibold">Playlists</h1>
+            {!isOnline && (
+              <span className="text-xs bg-yellow-800/60 px-2 py-1 rounded text-yellow-200">
+                Offline Mode - {cachedSoundscapes.length} sounds available
+              </span>
+            )}
+          </div>
           <Button
             className="py-1 h-9"
             variant="outline"
@@ -945,7 +1184,7 @@ function Home({ currentURL, setCurrentURL }) {
                       key={soundscape.index}
                       variant={
                         playlistItems.some(
-                          (item) => item.soundscapeIndex === soundscape.index
+                          (item) => item.index === soundscape.index
                         )
                           ? "secondary"
                           : "outline"
@@ -970,8 +1209,8 @@ function Home({ currentURL, setCurrentURL }) {
                         className="flex items-center gap-2 p-2 border rounded"
                       >
                         <span className="flex items-center gap-1">
-                          <span>{soundscapes[item.soundscapeIndex].emoji}</span>
-                          <span>{soundscapes[item.soundscapeIndex].name}</span>
+                          <span>{soundscapes[item.index].emoji}</span>
+                          <span>{soundscapes[item.index].name}</span>
                         </span>
                         <Input
                           type="number"
@@ -1056,8 +1295,8 @@ function Home({ currentURL, setCurrentURL }) {
                             : ""
                         }`}
                       >
-                        <span>{soundscapes[item.soundscapeIndex].emoji}</span>
-                        <span>{soundscapes[item.soundscapeIndex].name}</span>
+                        <span>{soundscapes[item.index].emoji}</span>
+                        <span>{soundscapes[item.index].name}</span>
                         <span className="text-zinc-400">
                           - {item.duration} minutes
                         </span>

@@ -2,7 +2,7 @@ export default function NoisefillSvg() {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      xmlns:xlink="http://www.w3.org/1999/xlink"
+      xmlnsXlink="http://www.w3.org/1999/xlink"
       width="24"
       zoomAndPan="magnify"
       viewBox="0 0 384 383.999986"
@@ -1002,7 +1002,7 @@ export default function NoisefillSvg() {
               fill="#000000"
               y="-38.399999"
               height="460.799983"
-              fill-opacity="0.75"
+              fillOpacity="0.75"
             />
           </g>
         </mask>
@@ -1044,7 +1044,7 @@ export default function NoisefillSvg() {
               fill="#000000"
               y="-38.399999"
               height="460.799983"
-              fill-opacity="0.75"
+              fillOpacity="0.75"
             />
           </g>
         </mask>
@@ -1098,7 +1098,7 @@ export default function NoisefillSvg() {
               fill="#000000"
               y="-38.399999"
               height="460.799983"
-              fill-opacity="0.75"
+              fillOpacity="0.75"
             />
           </g>
         </mask>
@@ -1143,7 +1143,7 @@ export default function NoisefillSvg() {
               fill="#000000"
               y="-38.399999"
               height="460.799983"
-              fill-opacity="0.75"
+              fillOpacity="0.75"
             />
           </g>
         </mask>
@@ -1173,7 +1173,7 @@ export default function NoisefillSvg() {
               fill="#000000"
               y="-38.399999"
               height="460.799983"
-              fill-opacity="0.75"
+              fillOpacity="0.75"
             />
           </g>
         </mask>
@@ -1203,7 +1203,7 @@ export default function NoisefillSvg() {
               fill="#000000"
               y="-38.399999"
               height="460.799983"
-              fill-opacity="0.75"
+              fillOpacity="0.75"
             />
           </g>
         </mask>
@@ -1245,7 +1245,7 @@ export default function NoisefillSvg() {
               fill="#000000"
               y="-38.399999"
               height="460.799983"
-              fill-opacity="0.75"
+              fillOpacity="0.75"
             />
           </g>
         </mask>
@@ -1278,7 +1278,7 @@ export default function NoisefillSvg() {
               fill="#000000"
               y="-38.399999"
               height="460.799983"
-              fill-opacity="0.75"
+              fillOpacity="0.75"
             />
           </g>
         </mask>
@@ -1311,7 +1311,7 @@ export default function NoisefillSvg() {
               fill="#000000"
               y="-38.399999"
               height="460.799983"
-              fill-opacity="0.75"
+              fillOpacity="0.75"
             />
           </g>
         </mask>
@@ -1341,7 +1341,7 @@ export default function NoisefillSvg() {
               fill="#000000"
               y="-38.399999"
               height="460.799983"
-              fill-opacity="0.75"
+              fillOpacity="0.75"
             />
           </g>
         </mask>
@@ -1371,7 +1371,7 @@ export default function NoisefillSvg() {
               fill="#000000"
               y="-38.399999"
               height="460.799983"
-              fill-opacity="0.75"
+              fillOpacity="0.75"
             />
           </g>
         </mask>
@@ -1401,7 +1401,7 @@ export default function NoisefillSvg() {
               fill="#000000"
               y="-38.399999"
               height="460.799983"
-              fill-opacity="0.75"
+              fillOpacity="0.75"
             />
           </g>
         </mask>
@@ -1431,7 +1431,7 @@ export default function NoisefillSvg() {
               fill="#000000"
               y="-38.399999"
               height="460.799983"
-              fill-opacity="0.75"
+              fillOpacity="0.75"
             />
           </g>
         </mask>
@@ -1461,7 +1461,7 @@ export default function NoisefillSvg() {
               fill="#000000"
               y="-38.399999"
               height="460.799983"
-              fill-opacity="0.75"
+              fillOpacity="0.75"
             />
           </g>
         </mask>
@@ -1491,7 +1491,7 @@ export default function NoisefillSvg() {
               fill="#000000"
               y="-38.399999"
               height="460.799983"
-              fill-opacity="0.75"
+              fillOpacity="0.75"
             />
           </g>
         </mask>
@@ -1524,7 +1524,7 @@ export default function NoisefillSvg() {
               fill="#000000"
               y="-38.399999"
               height="460.799983"
-              fill-opacity="0.75"
+              fillOpacity="0.75"
             />
           </g>
         </mask>
@@ -1554,7 +1554,7 @@ export default function NoisefillSvg() {
               fill="#000000"
               y="-38.399999"
               height="460.799983"
-              fill-opacity="0.75"
+              fillOpacity="0.75"
             />
           </g>
         </mask>
@@ -1584,7 +1584,7 @@ export default function NoisefillSvg() {
               fill="#000000"
               y="-38.399999"
               height="460.799983"
-              fill-opacity="0.75"
+              fillOpacity="0.75"
             />
           </g>
         </mask>
@@ -1617,7 +1617,7 @@ export default function NoisefillSvg() {
               fill="#000000"
               y="-38.399999"
               height="460.799983"
-              fill-opacity="0.75"
+              fillOpacity="0.75"
             />
           </g>
         </mask>
@@ -1647,7 +1647,7 @@ export default function NoisefillSvg() {
               fill="#000000"
               y="-38.399999"
               height="460.799983"
-              fill-opacity="0.75"
+              fillOpacity="0.75"
             />
           </g>
         </mask>
@@ -1670,7 +1670,7 @@ export default function NoisefillSvg() {
           <rect x="0" width="56" y="0" height="54" />
         </clipPath>
       </defs>
-      <g clip-path="url(#6a3de7355e)">
+      <g clipPath="url(#6a3de7355e)">
         <rect
           x="-38.4"
           fill="url(#0ecbdc3a2f)"
@@ -1681,14 +1681,14 @@ export default function NoisefillSvg() {
       </g>
       <g mask="url(#fe88187294)">
         <g transform="matrix(1, 0, 0, 1, 33, 19)">
-          <g clip-path="url(#876dcd286a)">
-            <g clip-path="url(#372699ec0e)">
-              <g clip-path="url(#1dc3b5e749)">
-                <g clip-path="url(#ee3b75023c)">
+          <g clipPath="url(#876dcd286a)">
+            <g clipPath="url(#372699ec0e)">
+              <g clipPath="url(#1dc3b5e749)">
+                <g clipPath="url(#ee3b75023c)">
                   <path
                     fill="#ffffff"
                     d="M 0.214844 19.875 L 16.160156 0.464844 L 45.269531 24.382812 L 29.328125 43.789062 Z M 0.214844 19.875 "
-                    fill-opacity="1"
+                    fillOpacity="1"
                     fill-rule="nonzero"
                   />
                 </g>
@@ -1697,26 +1697,26 @@ export default function NoisefillSvg() {
           </g>
         </g>
       </g>
-      <g clip-path="url(#a96f22ab0e)">
-        <g clip-path="url(#3e99caf159)">
+      <g clipPath="url(#a96f22ab0e)">
+        <g clipPath="url(#3e99caf159)">
           <path
             fill="#ffffff"
             d="M 62.246094 65.671875 L 108.414062 65.671875 L 108.414062 310.578125 L 62.246094 310.578125 Z M 62.246094 65.671875 "
-            fill-opacity="1"
+            fillOpacity="1"
             fill-rule="nonzero"
           />
         </g>
       </g>
       <g mask="url(#49a24c0c91)">
         <g transform="matrix(1, 0, 0, 1, 126, 285)">
-          <g clip-path="url(#c42019da46)">
-            <g clip-path="url(#e64225f18d)">
-              <g clip-path="url(#db2452f8ed)">
-                <g clip-path="url(#993bec20b8)">
+          <g clipPath="url(#c42019da46)">
+            <g clipPath="url(#e64225f18d)">
+              <g clipPath="url(#db2452f8ed)">
+                <g clipPath="url(#993bec20b8)">
                   <path
                     fill="#ffffff"
                     d="M 0.359375 21.632812 L 17.261719 1.058594 L 48.121094 26.410156 L 31.222656 46.984375 Z M 0.359375 21.632812 "
-                    fill-opacity="1"
+                    fillOpacity="1"
                     fill-rule="nonzero"
                   />
                 </g>
@@ -1725,36 +1725,36 @@ export default function NoisefillSvg() {
           </g>
         </g>
       </g>
-      <g clip-path="url(#e4ed138b46)">
-        <g clip-path="url(#a3e352c4a0)">
+      <g clipPath="url(#e4ed138b46)">
+        <g clipPath="url(#a3e352c4a0)">
           <path
             fill="#ffffff"
             d="M 113.730469 94.414062 L 159.902344 94.414062 L 159.902344 281.792969 L 113.730469 281.792969 Z M 113.730469 94.414062 "
-            fill-opacity="1"
+            fillOpacity="1"
             fill-rule="nonzero"
           />
         </g>
       </g>
-      <g clip-path="url(#033a1623f4)">
-        <g clip-path="url(#b9e4442082)">
+      <g clipPath="url(#033a1623f4)">
+        <g clipPath="url(#b9e4442082)">
           <path
             fill="#ffffff"
             d="M 166.675781 131.636719 L 212.84375 131.636719 L 212.84375 244.710938 L 166.675781 244.710938 Z M 166.675781 131.636719 "
-            fill-opacity="1"
+            fillOpacity="1"
             fill-rule="nonzero"
           />
         </g>
       </g>
       <g mask="url(#7875785a09)">
         <g transform="matrix(1, 0, 0, 1, 216, 298)">
-          <g clip-path="url(#b5adc5560f)">
-            <g clip-path="url(#12aca3b549)">
-              <g clip-path="url(#c9dad77574)">
-                <g clip-path="url(#e6847a9103)">
+          <g clipPath="url(#b5adc5560f)">
+            <g clipPath="url(#12aca3b549)">
+              <g clipPath="url(#c9dad77574)">
+                <g clipPath="url(#e6847a9103)">
                   <path
                     fill="#ffffff"
                     d="M 0.167969 33.101562 L 26.988281 0.453125 L 75.960938 40.683594 L 49.140625 73.332031 Z M 0.167969 33.101562 "
-                    fill-opacity="1"
+                    fillOpacity="1"
                     fill-rule="nonzero"
                   />
                 </g>
@@ -1763,26 +1763,26 @@ export default function NoisefillSvg() {
           </g>
         </g>
       </g>
-      <g clip-path="url(#5373764aa8)">
-        <g clip-path="url(#7bb5056de8)">
+      <g clipPath="url(#5373764aa8)">
+        <g clipPath="url(#7bb5056de8)">
           <path
             fill="#ffffff"
             d="M 219.621094 94.414062 L 265.792969 94.414062 L 265.792969 281.792969 L 219.621094 281.792969 Z M 219.621094 94.414062 "
-            fill-opacity="1"
+            fillOpacity="1"
             fill-rule="nonzero"
           />
         </g>
       </g>
       <g mask="url(#a5276518be)">
         <g transform="matrix(1, 0, 0, 1, 325, 172)">
-          <g clip-path="url(#c71cad23be)">
-            <g clip-path="url(#34880986e2)">
-              <g clip-path="url(#1b66255613)">
-                <g clip-path="url(#b300288ab0)">
+          <g clipPath="url(#c71cad23be)">
+            <g clipPath="url(#34880986e2)">
+              <g clipPath="url(#1b66255613)">
+                <g clipPath="url(#b300288ab0)">
                   <path
                     fill="#ffffff"
                     d="M 0.660156 17.308594 L 30.871094 1.03125 L 55.28125 46.34375 L 25.074219 62.617188 Z M 0.660156 17.308594 "
-                    fill-opacity="1"
+                    fillOpacity="1"
                     fill-rule="nonzero"
                   />
                 </g>
@@ -1793,14 +1793,14 @@ export default function NoisefillSvg() {
       </g>
       <g mask="url(#84628778a3)">
         <g transform="matrix(1, 0, 0, 1, 325, 253)">
-          <g clip-path="url(#d9f36a1b80)">
-            <g clip-path="url(#8f16f1b29c)">
-              <g clip-path="url(#9446fc7e19)">
-                <g clip-path="url(#e76cf9d2ad)">
+          <g clipPath="url(#d9f36a1b80)">
+            <g clipPath="url(#8f16f1b29c)">
+              <g clipPath="url(#9446fc7e19)">
+                <g clipPath="url(#e76cf9d2ad)">
                   <path
                     fill="#ffffff"
                     d="M 0.660156 11.320312 L 33.265625 1.082031 L 48.621094 49.988281 L 16.019531 60.226562 Z M 0.660156 11.320312 "
-                    fill-opacity="1"
+                    fillOpacity="1"
                     fill-rule="nonzero"
                   />
                 </g>
@@ -1811,14 +1811,14 @@ export default function NoisefillSvg() {
       </g>
       <g mask="url(#598e06aac2)">
         <g transform="matrix(1, 0, 0, 1, 296, 14)">
-          <g clip-path="url(#7b77da5809)">
-            <g clip-path="url(#b44e6d6f44)">
-              <g clip-path="url(#5b56715c24)">
-                <g clip-path="url(#1c6ba288d8)">
+          <g clipPath="url(#7b77da5809)">
+            <g clipPath="url(#b44e6d6f44)">
+              <g clipPath="url(#5b56715c24)">
+                <g clipPath="url(#1c6ba288d8)">
                   <path
                     fill="#ffffff"
                     d="M 1.023438 25.625 L 21.886719 0.226562 L 56.410156 28.589844 L 35.546875 53.984375 Z M 1.023438 25.625 "
-                    fill-opacity="1"
+                    fillOpacity="1"
                     fill-rule="nonzero"
                   />
                 </g>
@@ -1827,26 +1827,26 @@ export default function NoisefillSvg() {
           </g>
         </g>
       </g>
-      <g clip-path="url(#05805023a4)">
-        <g clip-path="url(#01cb3883b9)">
+      <g clipPath="url(#05805023a4)">
+        <g clipPath="url(#01cb3883b9)">
           <path
             fill="#ffffff"
             d="M 272.570312 65.671875 L 318.738281 65.671875 L 318.738281 310.578125 L 272.570312 310.578125 Z M 272.570312 65.671875 "
-            fill-opacity="1"
+            fillOpacity="1"
             fill-rule="nonzero"
           />
         </g>
       </g>
       <g mask="url(#507df185e1)">
         <g transform="matrix(1, 0, 0, 1, 146, 44)">
-          <g clip-path="url(#e878653064)">
-            <g clip-path="url(#3685ad7985)">
-              <g clip-path="url(#b15bfb1332)">
-                <g clip-path="url(#325de36edd)">
+          <g clipPath="url(#e878653064)">
+            <g clipPath="url(#3685ad7985)">
+              <g clipPath="url(#b15bfb1332)">
+                <g clipPath="url(#325de36edd)">
                   <path
                     fill="#ffffff"
                     d="M 0.347656 32.15625 L 26.066406 0.847656 L 73.035156 39.425781 L 47.3125 70.738281 Z M 0.347656 32.15625 "
-                    fill-opacity="1"
+                    fillOpacity="1"
                     fill-rule="nonzero"
                   />
                 </g>
@@ -1857,14 +1857,14 @@ export default function NoisefillSvg() {
       </g>
       <g mask="url(#0e490d98eb)">
         <g transform="matrix(1, 0, 0, 1, 216, 0)">
-          <g clip-path="url(#fa48e49c3e)">
-            <g clip-path="url(#e627776efc)">
-              <g clip-path="url(#acc3428b8a)">
-                <g clip-path="url(#42ca81292a)">
+          <g clipPath="url(#fa48e49c3e)">
+            <g clipPath="url(#e627776efc)">
+              <g clipPath="url(#acc3428b8a)">
+                <g clipPath="url(#42ca81292a)">
                   <path
                     fill="#ffffff"
                     d="M 0.171875 32.957031 L 26.414062 1.007812 L 74.335938 40.375 L 48.09375 72.324219 Z M 0.171875 32.957031 "
-                    fill-opacity="1"
+                    fillOpacity="1"
                     fill-rule="nonzero"
                   />
                 </g>
@@ -1875,14 +1875,14 @@ export default function NoisefillSvg() {
       </g>
       <g mask="url(#81041d1483)">
         <g transform="matrix(1, 0, 0, 1, 161, 9)">
-          <g clip-path="url(#f1ee149c91)">
-            <g clip-path="url(#a671395abd)">
-              <g clip-path="url(#2d5c6a8270)">
-                <g clip-path="url(#244fa030a1)">
+          <g clipPath="url(#f1ee149c91)">
+            <g clipPath="url(#a671395abd)">
+              <g clipPath="url(#2d5c6a8270)">
+                <g clipPath="url(#244fa030a1)">
                   <path
                     fill="#ffffff"
                     d="M 0.367188 30.4375 L 12.648438 0.179688 L 58.035156 18.601562 L 45.753906 48.859375 Z M 0.367188 30.4375 "
-                    fill-opacity="1"
+                    fillOpacity="1"
                     fill-rule="nonzero"
                   />
                 </g>
@@ -1893,14 +1893,14 @@ export default function NoisefillSvg() {
       </g>
       <g mask="url(#2ec8b0739d)">
         <g transform="matrix(1, 0, 0, 1, 159, 325)">
-          <g clip-path="url(#488aa8a5f9)">
-            <g clip-path="url(#43fbe0be2c)">
-              <g clip-path="url(#21f92428ea)">
-                <g clip-path="url(#213849d1e6)">
+          <g clipPath="url(#488aa8a5f9)">
+            <g clipPath="url(#43fbe0be2c)">
+              <g clipPath="url(#21f92428ea)">
+                <g clipPath="url(#213849d1e6)">
                   <path
                     fill="#ffffff"
                     d="M 0.902344 36.382812 L 13.398438 1.039062 L 66.414062 19.78125 L 53.921875 55.125 Z M 0.902344 36.382812 "
-                    fill-opacity="1"
+                    fillOpacity="1"
                     fill-rule="nonzero"
                   />
                 </g>
@@ -1911,14 +1911,14 @@ export default function NoisefillSvg() {
       </g>
       <g mask="url(#931730b4cf)">
         <g transform="matrix(1, 0, 0, 1, 292, 310)">
-          <g clip-path="url(#6c94370d4f)">
-            <g clip-path="url(#f2606e4d5b)">
-              <g clip-path="url(#86d7e9ede7)">
-                <g clip-path="url(#30795fbee9)">
+          <g clipPath="url(#6c94370d4f)">
+            <g clipPath="url(#f2606e4d5b)">
+              <g clipPath="url(#86d7e9ede7)">
+                <g clipPath="url(#30795fbee9)">
                   <path
                     fill="#ffffff"
                     d="M 0.464844 25.699219 L 21.097656 0.585938 L 58.765625 31.53125 L 38.136719 56.644531 Z M 0.464844 25.699219 "
-                    fill-opacity="1"
+                    fillOpacity="1"
                     fill-rule="nonzero"
                   />
                 </g>
@@ -1929,14 +1929,14 @@ export default function NoisefillSvg() {
       </g>
       <g mask="url(#afba2f90d3)">
         <g transform="matrix(1, 0, 0, 1, 18, 302)">
-          <g clip-path="url(#bf50900854)">
-            <g clip-path="url(#e8426d4298)">
-              <g clip-path="url(#3dafeb8db4)">
-                <g clip-path="url(#fdba16015e)">
+          <g clipPath="url(#bf50900854)">
+            <g clipPath="url(#e8426d4298)">
+              <g clipPath="url(#3dafeb8db4)">
+                <g clipPath="url(#fdba16015e)">
                   <path
                     fill="#ffffff"
                     d="M 1.0625 29.171875 L 24.710938 0.386719 L 67.890625 35.859375 L 44.242188 64.644531 Z M 1.0625 29.171875 "
-                    fill-opacity="1"
+                    fillOpacity="1"
                     fill-rule="nonzero"
                   />
                 </g>
@@ -1947,14 +1947,14 @@ export default function NoisefillSvg() {
       </g>
       <g mask="url(#193f6d6178)">
         <g transform="matrix(1, 0, 0, 1, 7, 64)">
-          <g clip-path="url(#f9bd0bf465)">
-            <g clip-path="url(#550be5a4f0)">
-              <g clip-path="url(#191234addd)">
-                <g clip-path="url(#c6575c6e09)">
+          <g clipPath="url(#f9bd0bf465)">
+            <g clipPath="url(#550be5a4f0)">
+              <g clipPath="url(#191234addd)">
+                <g clipPath="url(#c6575c6e09)">
                   <path
                     fill="#ffffff"
                     d="M 0.386719 3.339844 L 38.460938 0.371094 L 42.914062 57.484375 L 4.839844 60.449219 Z M 0.386719 3.339844 "
-                    fill-opacity="1"
+                    fillOpacity="1"
                     fill-rule="nonzero"
                   />
                 </g>
@@ -1965,14 +1965,14 @@ export default function NoisefillSvg() {
       </g>
       <g mask="url(#20b546852c)">
         <g transform="matrix(1, 0, 0, 1, 3, 186)">
-          <g clip-path="url(#ad6a874299)">
-            <g clip-path="url(#481755e006)">
-              <g clip-path="url(#47c519dd85)">
-                <g clip-path="url(#78535d3c21)">
+          <g clipPath="url(#ad6a874299)">
+            <g clipPath="url(#481755e006)">
+              <g clipPath="url(#47c519dd85)">
+                <g clipPath="url(#78535d3c21)">
                   <path
                     fill="#ffffff"
                     d="M 0.71875 18.367188 L 27.988281 0.867188 L 54.234375 41.773438 L 26.964844 59.269531 Z M 0.71875 18.367188 "
-                    fill-opacity="1"
+                    fillOpacity="1"
                     fill-rule="nonzero"
                   />
                 </g>
@@ -1983,14 +1983,14 @@ export default function NoisefillSvg() {
       </g>
       <g mask="url(#479eb52dbb)">
         <g transform="matrix(1, 0, 0, 1, 80, 3)">
-          <g clip-path="url(#b8e4342080)">
-            <g clip-path="url(#97e357acc3)">
-              <g clip-path="url(#a5253b5be0)">
-                <g clip-path="url(#96875df812)">
+          <g clipPath="url(#b8e4342080)">
+            <g clipPath="url(#97e357acc3)">
+              <g clipPath="url(#a5253b5be0)">
+                <g clipPath="url(#96875df812)">
                   <path
                     fill="#ffffff"
                     d="M 1.117188 30.398438 L 25.578125 0.628906 L 70.234375 37.3125 L 45.777344 67.085938 Z M 1.117188 30.398438 "
-                    fill-opacity="1"
+                    fillOpacity="1"
                     fill-rule="nonzero"
                   />
                 </g>
@@ -2001,14 +2001,14 @@ export default function NoisefillSvg() {
       </g>
       <g mask="url(#0a8b4426b4)">
         <g transform="matrix(1, 0, 0, 1, 329, 94)">
-          <g clip-path="url(#5721a71e4e)">
-            <g clip-path="url(#a94b096905)">
-              <g clip-path="url(#701310cad7)">
-                <g clip-path="url(#5d58853f75)">
+          <g clipPath="url(#5721a71e4e)">
+            <g clipPath="url(#a94b096905)">
+              <g clipPath="url(#701310cad7)">
+                <g clipPath="url(#5d58853f75)">
                   <path
                     fill="#ffffff"
                     d="M 0.195312 3.351562 L 35.75 0.414062 L 40.160156 53.746094 L 4.605469 56.683594 Z M 0.195312 3.351562 "
-                    fill-opacity="1"
+                    fillOpacity="1"
                     fill-rule="nonzero"
                   />
                 </g>
@@ -2019,14 +2019,14 @@ export default function NoisefillSvg() {
       </g>
       <g mask="url(#8901447234)">
         <g transform="matrix(1, 0, 0, 1, 85, 313)">
-          <g clip-path="url(#4ea8f5e5f2)">
-            <g clip-path="url(#ee97dddfae)">
-              <g clip-path="url(#ca6d139247)">
-                <g clip-path="url(#21dbd93b0f)">
+          <g clipPath="url(#4ea8f5e5f2)">
+            <g clipPath="url(#ee97dddfae)">
+              <g clipPath="url(#ca6d139247)">
+                <g clipPath="url(#21dbd93b0f)">
                   <path
                     fill="#ffffff"
                     d="M 0.914062 26.261719 L 22.296875 0.230469 L 61.34375 32.304688 L 39.960938 58.335938 Z M 0.914062 26.261719 "
-                    fill-opacity="1"
+                    fillOpacity="1"
                     fill-rule="nonzero"
                   />
                 </g>
@@ -2037,14 +2037,14 @@ export default function NoisefillSvg() {
       </g>
       <g mask="url(#685786474b)">
         <g transform="matrix(1, 0, 0, 1, 161, 253)">
-          <g clip-path="url(#050c2c5843)">
-            <g clip-path="url(#53b16543c7)">
-              <g clip-path="url(#cda4decf8c)">
-                <g clip-path="url(#5bb8fd555f)">
+          <g clipPath="url(#050c2c5843)">
+            <g clipPath="url(#53b16543c7)">
+              <g clipPath="url(#cda4decf8c)">
+                <g clipPath="url(#5bb8fd555f)">
                   <path
                     fill="#ffffff"
                     d="M 0.144531 29.726562 L 23.675781 1.078125 L 66.648438 36.378906 L 43.113281 65.023438 Z M 0.144531 29.726562 "
-                    fill-opacity="1"
+                    fillOpacity="1"
                     fill-rule="nonzero"
                   />
                 </g>
@@ -2055,14 +2055,14 @@ export default function NoisefillSvg() {
       </g>
       <g mask="url(#8775d0929b)">
         <g transform="matrix(1, 0, 0, 1, 5, 249)">
-          <g clip-path="url(#4b058cb670)">
-            <g clip-path="url(#8178633958)">
-              <g clip-path="url(#8cbad6f1cb)">
-                <g clip-path="url(#3732d55031)">
+          <g clipPath="url(#4b058cb670)">
+            <g clipPath="url(#8178633958)">
+              <g clipPath="url(#8cbad6f1cb)">
+                <g clipPath="url(#3732d55031)">
                   <path
                     fill="#ffffff"
                     d="M 0.625 21.734375 L 18.0625 0.503906 L 49.910156 26.664062 L 32.46875 47.894531 Z M 0.625 21.734375 "
-                    fill-opacity="1"
+                    fillOpacity="1"
                     fill-rule="nonzero"
                   />
                 </g>
@@ -2073,14 +2073,14 @@ export default function NoisefillSvg() {
       </g>
       <g mask="url(#621cf04cca)">
         <g transform="matrix(1, 0, 0, 1, 5, 128)">
-          <g clip-path="url(#9cc2c14742)">
-            <g clip-path="url(#4d29e82872)">
-              <g clip-path="url(#eb4986fdca)">
-                <g clip-path="url(#e91d7dd31e)">
+          <g clipPath="url(#9cc2c14742)">
+            <g clipPath="url(#4d29e82872)">
+              <g clipPath="url(#eb4986fdca)">
+                <g clipPath="url(#e91d7dd31e)">
                   <path
                     fill="#ffffff"
                     d="M 0.625 24.273438 L 20.148438 0.503906 L 55.800781 29.789062 L 36.277344 53.558594 Z M 0.625 24.273438 "
-                    fill-opacity="1"
+                    fillOpacity="1"
                     fill-rule="nonzero"
                   />
                 </g>
