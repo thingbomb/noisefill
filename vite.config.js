@@ -21,12 +21,12 @@ export default defineConfig({
         display: "standalone",
         background_color: "#010101",
         theme_color: "#010101",
-        display_override: ["window-controls-overlay"],
         icons: [
           {
             src: "maskable.png",
             sizes: "512x512",
             type: "image/png",
+            purpose: "maskable",
           },
         ],
       },
