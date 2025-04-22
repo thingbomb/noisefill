@@ -332,54 +332,12 @@ function App() {
       setCurrentPlaylistIndex(0);
     };
 
-    // Handle the smart-mix-transition event to update listening time only
-    // Session count increments are now handled directly in Home.jsx when sounds are selected
-    const handleSmartMixTransition = (event) => {
-      if (currentSoundRef.current && startTimeRef.current) {
-        const soundKey = currentSoundRef.current;
-        const endTime = new Date();
-        const listenedMinutes = parseFloat(
-          ((endTime - startTimeRef.current) / (1000 * 60)).toFixed(2)
-        );
-
-        // Only update total time - session count is incremented when buttons are clicked
-        setListeningPreferences((prev) => {
-          const soundData = prev[soundKey] || {
-            totalMinutes: 0,
-            sessionCount: 0,
-          };
-
-          return {
-            ...prev,
-            [soundKey]: {
-              totalMinutes: parseFloat(
-                (soundData.totalMinutes + listenedMinutes).toFixed(2)
-              ),
-              // Don't increment session count here - it's done when a button is clicked
-              sessionCount: soundData.sessionCount,
-            },
-          };
-        });
-
-        console.log(`Smart Mix transition: updated time for ${soundKey}`);
-
-        // Reset for the next sound
-        startTimeRef.current = new Date();
-        currentSessionDurationRef.current = 0;
-      }
-    };
-
     window.addEventListener("playlist-change", handlePlaylistChange);
     window.addEventListener("playlist-stop", handlePlaylistStop);
-    window.addEventListener("smart-mix-transition", handleSmartMixTransition);
 
     return () => {
       window.removeEventListener("playlist-change", handlePlaylistChange);
       window.removeEventListener("playlist-stop", handlePlaylistStop);
-      window.removeEventListener(
-        "smart-mix-transition",
-        handleSmartMixTransition
-      );
     };
   }, []);
 

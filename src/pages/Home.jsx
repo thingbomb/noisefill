@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef, useCallback } from "react";
 import { Button } from "../components/ui/button";
-import { Sparkles } from "lucide-react";
+
 import {
   Dialog,
   DialogContent,
@@ -163,36 +163,10 @@ function Home({ currentURL, setCurrentURL }) {
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const [cachedSoundscapes, setCachedSoundscapes] = useState([]);
 
-  // Smart Mix state
-  const [isSmartMixActive, setIsSmartMixActive] = useState(false);
   const [listeningPreferences, setListeningPreferences] = useState({});
-  const [hasEligibleSounds, setHasEligibleSounds] = useState(false);
-  const smartMixTimerRef = useRef(null);
 
-  // Listen for listening preferences updates from App component
-  // Check if there are eligible sounds for Smart Mix
-  const checkEligibleSounds = useCallback(() => {
-    const MINIMUM_LISTENING_TIME = 300; // in seconds (5 minutes)
-
-    // Check if any sounds have been listened to for at least 5 minutes
-    const eligibleSoundsExist = Object.entries(listeningPreferences).some(
-      ([_, data]) => {
-        return (
-          data &&
-          data.totalMinutes &&
-          data.totalMinutes * 60 > MINIMUM_LISTENING_TIME
-        );
-      }
-    );
-
-    setHasEligibleSounds(eligibleSoundsExist);
-    return eligibleSoundsExist;
-  }, [listeningPreferences]);
-
-  // Update eligible sounds check whenever listening preferences change
-  useEffect(() => {
-    checkEligibleSounds();
-  }, [listeningPreferences, checkEligibleSounds]);
+  const [playedLofiSounds, setPlayedLofiSounds] = useState([]);
+  const lofiQueueRef = useRef([]);
 
   useEffect(() => {
     const handleOnline = () => {
@@ -273,14 +247,89 @@ function Home({ currentURL, setCurrentURL }) {
     };
   }, []);
 
-  // Clean up smart mix on component unmount
   useEffect(() => {
-    return () => {
-      if (smartMixTimerRef.current) {
-        clearTimeout(smartMixTimerRef.current);
+    const initializeLofiQueue = () => {
+      const lofiSounds = soundscapes.filter((sound) => sound.type === "lofi");
+
+      if (lofiSounds.length === 0) return;
+
+      const shuffled = [...lofiSounds].sort(() => Math.random() - 0.5);
+      lofiQueueRef.current = shuffled.map((sound) => sound.index);
+      console.log("Lofi queue initialized:", lofiQueueRef.current);
+    };
+
+    initializeLofiQueue();
+
+    const audio = document.getElementById("player");
+    const handleAudioEnded = () => {
+      if (currentPlaylist) return;
+
+      const currentIndex = parseInt(audio.getAttribute("index"));
+      const currentSound = soundscapes[currentIndex];
+
+      if (!currentSound) return;
+
+      const isLofi = currentSound.type === "lofi";
+
+      if (isLofi) {
+        console.log("Lofi track ended, shuffling to next lofi");
+        playNextLofiSound(currentIndex);
+      } else {
+        console.log("Regular soundscape ended, looping");
+        audio.currentTime = 0;
+        audio.play().catch((err) => console.error("Error looping sound:", err));
       }
     };
-  }, []);
+
+    audio.addEventListener("ended", handleAudioEnded);
+
+    return () => {
+      audio.removeEventListener("ended", handleAudioEnded);
+    };
+  }, [currentPlaylist]);
+
+  const playNextLofiSound = (currentSoundIndex) => {
+    const lofiSounds = soundscapes.filter((sound) => sound.type === "lofi");
+
+    if (lofiSounds.length === 0) return;
+
+    if (
+      playedLofiSounds.length >= lofiSounds.length ||
+      lofiQueueRef.current.length === 0
+    ) {
+      console.log("All lofi sounds have been played, resetting queue");
+      setPlayedLofiSounds([]);
+
+      const newQueue = lofiSounds
+        .filter((sound) => sound.index !== currentSoundIndex)
+        .sort(() => Math.random() - 0.5)
+        .map((sound) => sound.index);
+
+      lofiQueueRef.current = newQueue;
+    }
+
+    const nextSoundIndex = lofiQueueRef.current.shift();
+    const nextSound = soundscapes[nextSoundIndex];
+
+    if (nextSound) {
+      console.log(
+        `Lofi radio playing next: ${nextSound.name} (index: ${nextSoundIndex})`
+      );
+
+      setPlayedLofiSounds((prev) => [...prev, nextSoundIndex]);
+
+      playSound(
+        nextSound.url,
+        nextSound.volume,
+        nextSound.name,
+        nextSound.image,
+        nextSound.index
+      );
+
+      setMessage(`Now playing: ${nextSound.name}`);
+      setTimeout(() => setMessage(""), 3000);
+    }
+  };
 
   useEffect(() => {
     if (window.location.hostname === "/") {
@@ -372,245 +421,6 @@ function Home({ currentURL, setCurrentURL }) {
       }
     };
   }, [playlistTimer]);
-
-  // Smart Mix Functions
-  const getSmartMix = () => {
-    // Log what we're working with for debugging
-    console.log("Current listening preferences:", listeningPreferences);
-
-    // Only include sounds that have been listened to for at least 5 minutes (300 seconds)
-    const MINIMUM_LISTENING_TIME = 300; // in seconds (5 minutes)
-
-    const eligibleSounds = Object.entries(listeningPreferences)
-      .filter(([key, data]) => {
-        // Make sure we have valid data with totalMinutes exceeding minimum threshold
-        return (
-          data &&
-          data.totalMinutes &&
-          data.totalMinutes * 60 > MINIMUM_LISTENING_TIME
-        ); // Convert minutes to seconds
-      })
-      .sort((a, b) => b[1].totalMinutes - a[1].totalMinutes); // Sort by most listened
-
-    console.log("Eligible sounds found:", eligibleSounds);
-
-    if (eligibleSounds.length === 0) {
-      // If no listening history, use the top 3 sounds from soundscapes
-      console.log("No eligible sounds, using default top 3 sounds");
-      return soundscapes.slice(0, 3).map((sound, index) => ({
-        soundIndex: index,
-        soundObject: sound,
-        duration: 2, // Default 2 minute duration
-      }));
-    }
-
-    // Get top sounds (up to 5)
-    const topSounds = eligibleSounds.slice(0, 5);
-    console.log("Top sounds selected:", topSounds);
-
-    // Create a mix with durations based on average listening session
-    return topSounds.map(([soundKey, data]) => {
-      // Calculate mean duration of listening sessions
-      // Default duration - at least 1.5 minutes
-      let meanDuration = 1.5;
-
-      // Calculate actual mean using total minutes and session count
-      if (data.sessionCount && data.sessionCount > 0) {
-        // Mean duration = total time / number of sessions
-        meanDuration = data.totalMinutes / data.sessionCount;
-
-        // Ensure minimum duration of 1.5 minutes for better experience
-        meanDuration = Math.max(meanDuration, 1.5);
-      }
-
-      // Find sound in soundscapes by searching for matching name pattern
-      const foundSoundIndex = soundscapes.findIndex((s) => {
-        const normalizedName = s.name.toLowerCase().replace(/\s+/g, "-");
-        return (
-          normalizedName === soundKey ||
-          normalizedName.includes(soundKey) ||
-          soundKey.includes(normalizedName)
-        );
-      });
-
-      // Use direct index if found, otherwise use first sound
-      const soundIndex = foundSoundIndex >= 0 ? foundSoundIndex : 0;
-      const soundObject = soundscapes[soundIndex];
-
-      console.log(`Found sound ${soundKey}:`, {
-        soundIndex,
-        soundObject,
-        meanDuration,
-      });
-
-      return {
-        soundIndex,
-        soundObject,
-        duration: meanDuration,
-      };
-    });
-  };
-
-  const startSmartMix = () => {
-    console.log("Starting Smart Mix");
-
-    // Stop any current playlist
-    if (currentPlaylist) {
-      stopPlaylist();
-    }
-
-    // Stop any current playback
-    const audio = audioRef.current || document.getElementById("player");
-    audio.pause();
-
-    // Clear any existing timers
-    if (smartMixTimerRef.current) {
-      clearTimeout(smartMixTimerRef.current);
-      smartMixTimerRef.current = null;
-    }
-
-    // Get smart mix sounds
-    const smartMixSounds = getSmartMix();
-    console.log("Smart mix sounds generated:", smartMixSounds);
-
-    if (!smartMixSounds || smartMixSounds.length === 0) {
-      console.log("No sounds available for Smart Mix");
-      return;
-    }
-
-    // Force isSmartMixActive to true first
-    setIsSmartMixActive(true);
-
-    // Play immediately without waiting - we've ensured smart mix is active
-    // Store the mixSounds in a ref to avoid state update issues
-    const currentMixRef = { sounds: smartMixSounds, active: true };
-    playNextSmartMixSound(smartMixSounds, 0);
-  };
-
-  const playNextSmartMixSound = (mixSounds, index) => {
-    console.log(`Playing sound ${index} of ${mixSounds.length}`);
-
-    // Check if we've reached the end of the playlist
-    // Don't check isSmartMixActive here since it may not have updated yet
-    if (index >= mixSounds.length) {
-      console.log(
-        "End of Smart Mix playlist reached - looping back to beginning"
-      );
-      // Reset index to 0 to loop back to the beginning of the playlist
-      index = 0;
-    }
-
-    // If we're transitioning to a new sound, ensure the current session is properly recorded
-    if (index > 0 || mixSounds.length === 1) {
-      // Get reference to the audio element
-      const audio = audioRef.current || document.getElementById("player");
-
-      // Create a custom event to force recording the current session
-      // This will update listeningSessions array with accurate duration before switching sounds
-      if (audio && audio.title) {
-        const soundKey = audio.title.toLowerCase().replace(/\s+/g, "-");
-        const event = new CustomEvent("smart-mix-transition", {
-          detail: { soundKey },
-        });
-        window.dispatchEvent(event);
-      }
-    }
-
-    const currentSound = mixSounds[index];
-    if (!currentSound.soundObject) {
-      console.log("Invalid sound object, skipping to next");
-      // Skip if sound not found and try the next one
-      playNextSmartMixSound(mixSounds, index + 1);
-      return;
-    }
-
-    console.log("About to play sound:", currentSound);
-
-    // Make sure we have all the required properties
-    const soundObject = currentSound.soundObject;
-    const url = soundObject.url;
-    const volume = soundObject.volume || 1.0;
-    const name = soundObject.name;
-    const image = soundObject.image || "";
-    const soundIndex = currentSound.soundIndex || 0;
-
-    // Extract the sound key for incrementing session count
-    const soundName = name.toLowerCase().replace(/\s+/g, "-");
-
-    // Increment the session count FOR THIS SOUND right when it's selected to play in Smart Mix
-    window.incrementSessionCount?.(soundName);
-    console.log(
-      `Smart Mix selecting sound: incrementing session count for ${soundName}`
-    );
-
-    // Play the current sound directly
-    try {
-      const audio = audioRef.current || document.getElementById("player");
-
-      // Set up new audio source
-      audio.src = url;
-      audio.title = name;
-      audio.setAttribute("image", image);
-      audio.setAttribute("index", soundIndex);
-      setCurrentURL(url);
-      audio.volume = volume;
-
-      // Update UI state
-      setPlaying(true);
-
-      // Update message
-      const durationText = currentSound.duration.toFixed(1);
-      setMessage(`Smart Mix: ${name} (${durationText} minutes)`);
-
-      // Play the audio
-      const playPromise = audio.play();
-      if (playPromise) {
-        playPromise.catch((err) => {
-          console.error("Error playing sound:", err);
-        });
-      }
-
-      // Schedule next sound with minimum duration of 90 seconds
-      const MINIMUM_PLAY_DURATION = 90 * 1000; // 90 seconds in ms
-      let durationMs = currentSound.duration * 60 * 1000; // Convert minutes to ms
-
-      // Ensure each sound plays for at least 90 seconds while still respecting mean listening session duration
-      durationMs = Math.max(durationMs, MINIMUM_PLAY_DURATION);
-
-      console.log(
-        `Scheduling next sound in ${durationMs}ms (${
-          durationMs / 1000
-        } seconds)`
-      );
-
-      smartMixTimerRef.current = setTimeout(() => {
-        playNextSmartMixSound(mixSounds, index + 1);
-      }, durationMs);
-    } catch (error) {
-      console.error("Error in Smart Mix playback:", error);
-      // Try to recover by playing the next sound
-      setTimeout(() => {
-        playNextSmartMixSound(mixSounds, index + 1);
-      }, 1000);
-    }
-  };
-
-  const stopSmartMix = () => {
-    console.log("Explicitly stopping Smart Mix");
-    setIsSmartMixActive(false);
-    setMessage("");
-    if (smartMixTimerRef.current) {
-      clearTimeout(smartMixTimerRef.current);
-      smartMixTimerRef.current = null;
-    }
-
-    // Pause any currently playing audio
-    const audio = audioRef.current || document.getElementById("player");
-    if (audio && !audio.paused) {
-      audio.pause();
-      setPlaying(false);
-    }
-  };
 
   // Add event listeners for playlist navigation from the media bar
   useEffect(() => {
@@ -720,10 +530,12 @@ function Home({ currentURL, setCurrentURL }) {
   const playSound = async (url, volume, name, image, index) => {
     const audio = audioRef.current || document.getElementById("player");
 
-    // If smart mix is active and this is a manual sound change, stop the smart mix
-    if (isSmartMixActive && !smartMixTimerRef.current) {
-      stopSmartMix();
+    const currentSound = soundscapes[index];
+    const isLofi = currentSound?.type === "lofi";
+    if (isLofi) {
+      setPlayedLofiSounds((prev) => [...prev, index]);
     }
+    audio.loop = !isLofi;
 
     // Check if we are playing or pausing the same sound
     const isSameSound = audio.src === url;
@@ -993,15 +805,15 @@ function Home({ currentURL, setCurrentURL }) {
   };
 
   const stopPlaylist = () => {
-    if (playlistTimer) {
-      clearTimeout(playlistTimer);
-    }
-    setCurrentPlaylist(null);
-    setCurrentPlaylistIndex(0);
-    setPlaylistTimer(null);
+    if (!currentPlaylist) return;
 
     const audio = audioRef.current || document.getElementById("player");
     audio.pause();
+
+    clearTimeout(playlistTimer);
+    setPlaylistTimer(null);
+    setCurrentPlaylist(null);
+    setCurrentPlaylistIndex(0);
     setPlaying(false);
     setMessage("");
 
@@ -1034,33 +846,7 @@ function Home({ currentURL, setCurrentURL }) {
       </span>
       <div className="flex flex-wrap gap-2 mt-2">
         <CreditsMenu />
-        <Button
-          variant={isSmartMixActive ? "secondary" : "outline"}
-          onClick={() => {
-            if (isSmartMixActive) {
-              stopSmartMix();
-            } else {
-              startSmartMix();
-            }
-          }}
-          className={cn("flex items-center gap-2", {
-            "bg-purple-900/20 text-purple-300 border-purple-500":
-              isSmartMixActive,
-            hidden: !isSmartMixActive && hasEligibleSounds,
-          })}
-          title={
-            !hasEligibleSounds && !isSmartMixActive
-              ? "Listen to sounds for at least 5 minutes to unlock Smart Mix"
-              : ""
-          }
-        >
-          <Sparkles
-            className={`h-4 w-4 ${isSmartMixActive ? "text-purple-300" : ""}`}
-          />
-          <span>
-            {isSmartMixActive ? "Stop Smart Mix" : "Smart Mix (beta)"}
-          </span>
-        </Button>
+
         {soundscapes
           .filter((sound) => {
             if (

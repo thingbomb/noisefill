@@ -7,6 +7,7 @@
  * - attribution: a list of strings representing the attribution for the soundscape
  * - image: the URL of an image representing the soundscape
  * - index: the index of the soundscape in the list, used for sorting and identification
+ * - type: the type of soundscape ("lofi", "ambient", "nature", etc.) - determines playback behavior
  */
 let soundscapes = [
   {
@@ -20,6 +21,7 @@ let soundscapes = [
     image: "https://cdn.noisefill.com/ocean.png",
     index: 0,
     categories: ["water", "chill", "focus", "relax"],
+    type: "nature",
   },
   {
     name: "Forest",
@@ -32,6 +34,7 @@ let soundscapes = [
     image: "https://cdn.noisefill.com/forest.png",
     index: 1,
     categories: ["nature", "ambience"],
+    type: "nature",
   },
   {
     name: "Rain",
@@ -44,6 +47,7 @@ let soundscapes = [
     image: "https://cdn.noisefill.com/rain.png",
     index: 2,
     categories: ["favorites", "nature", "ambience", "sleep", "chill", "relax"],
+    type: "nature",
   },
   {
     name: "River",
@@ -56,6 +60,7 @@ let soundscapes = [
     image: "https://cdn.noisefill.com/river.png",
     index: 3,
     categories: ["favorites", "nature", "ambience", "sleep", "chill", "relax"],
+    type: "nature",
   },
   {
     name: "Wind",
@@ -68,6 +73,7 @@ let soundscapes = [
     image: "https://cdn.noisefill.com/wind.png",
     index: 4,
     categories: ["nature", "ambience"],
+    type: "nature",
   },
   {
     name: "Fire",
@@ -80,6 +86,7 @@ let soundscapes = [
     image: "https://cdn.noisefill.com/fire.png",
     index: 5,
     categories: ["natural", "ambience"],
+    type: "nature",
   },
   {
     name: "Desert",
@@ -92,6 +99,7 @@ let soundscapes = [
     image: "https://cdn.noisefill.com/Desert.png",
     index: 6,
     categories: ["chill", "natural", "ambience"],
+    type: "nature",
   },
   {
     name: "Arctic",
@@ -104,6 +112,7 @@ let soundscapes = [
     ],
     index: 7,
     categories: ["sleep", "chill", "nature", "ambience"],
+    type: "nature",
   },
   {
     name: "Kettle",
@@ -116,6 +125,7 @@ let soundscapes = [
     ],
     index: 8,
     categories: ["chill", "appliance", "relax"],
+    type: "ambient",
   },
   {
     name: "Crickets",
@@ -128,6 +138,7 @@ let soundscapes = [
     ],
     index: 9,
     categories: ["natural", "nature"],
+    type: "nature",
   },
   {
     name: "Underwater",
@@ -140,6 +151,7 @@ let soundscapes = [
     ],
     index: 10,
     categories: ["sleep", "chill", "ambience", "relax"],
+    type: "nature",
   },
   {
     name: "Seagulls",
@@ -153,6 +165,7 @@ let soundscapes = [
     reversedURL: "https://cdn.noisefill.com/reversed-seagulls.mp3",
     index: 11,
     categories: ["natural", "nature"],
+    type: "nature",
   },
   {
     name: "Bubbles",
@@ -166,6 +179,7 @@ let soundscapes = [
     reversedURL: "https://cdn.noisefill.com/reversed-bubbles.mp3",
     index: 12,
     categories: ["sleep", "chill", "ambience", "relax"],
+    type: "ambient",
   },
   {
     name: "Groovy lofi",
@@ -179,6 +193,7 @@ let soundscapes = [
     reversedURL: "https://cdn.noisefill.com/ReversedGroovy.flac",
     index: 13,
     categories: ["focus"],
+    type: "lofi",
   },
   {
     name: "Upbeat lofi",
@@ -192,6 +207,7 @@ let soundscapes = [
     reversedURL: "https://cdn.noisefill.com/ReversedUpbeat.mp3",
     index: 14,
     categories: ["focus", "chill", "relax"],
+    type: "lofi",
   },
   {
     name: "Chill lofi",
@@ -205,6 +221,7 @@ let soundscapes = [
     reversedURL: "https://cdn.noisefill.com/ReversedChill.mp3",
     index: 15,
     categories: ["focus", "chill", "relax"],
+    type: "lofi",
   },
   {
     name: "Retro lofi",
@@ -218,6 +235,7 @@ let soundscapes = [
     reversedURL: "https://cdn.noisefill.com/ReversedRetro.flac",
     index: 16,
     categories: ["focus", "chill", "relax"],
+    type: "lofi",
   },
   {
     name: "Classic lofi",
@@ -231,6 +249,7 @@ let soundscapes = [
     reversedURL: "https://cdn.noisefill.com/ReversedClassic.flac",
     index: 17,
     categories: ["upbeat", "focus"],
+    type: "lofi",
   },
   {
     name: "Piano lofi",
@@ -244,6 +263,7 @@ let soundscapes = [
     reversedURL: "https://cdn.noisefill.com/ReversedPiano.flac",
     index: 18,
     categories: ["upbeat", "focus", "relax"],
+    type: "lofi",
   },
   {
     name: "Rising lofi",
@@ -257,6 +277,7 @@ let soundscapes = [
     reversedURL: "https://cdn.noisefill.com/ReversedRising.flac",
     index: 19,
     categories: ["upbeat", "focus", "relax"],
+    type: "lofi",
   },
   {
     name: "Deep lofi",
@@ -270,6 +291,7 @@ let soundscapes = [
     reversedURL: "https://cdn.noisefill.com/ReversedDeep.flac",
     index: 20,
     categories: ["upbeat", "focus"],
+    type: "lofi",
   },
   {
     name: "Vibe lofi",
@@ -283,6 +305,7 @@ let soundscapes = [
     reversedURL: "https://cdn.noisefill.com/ReversedVibe.flac",
     index: 21,
     categories: ["upbeat", "focus"],
+    type: "lofi",
   },
   {
     name: "Uplifting lofi",
@@ -296,6 +319,7 @@ let soundscapes = [
     reversedURL: "https://cdn.noisefill.com/reversed-uplifting.mp3",
     index: 22,
     categories: ["upbeat", "focus", "relax"],
+    type: "lofi",
   },
   {
     name: "Morning lofi",
