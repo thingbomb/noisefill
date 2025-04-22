@@ -369,20 +369,24 @@ function Home({ currentURL, setCurrentURL }) {
         navigator.mediaSession.setActionHandler("nexttrack", () => {
           const index = parseInt(audio.getAttribute("index"));
           const currentSound = soundscapes[index];
-          
+
           // Check if current track is lofi
           if (currentSound && currentSound.type === "lofi") {
             // If lofi, find the next lofi track
-            const lofiSounds = soundscapes.filter(sound => sound.type === "lofi");
-            const currentLofiIndex = lofiSounds.findIndex(sound => sound.index === index);
-            
+            const lofiSounds = soundscapes.filter(
+              (sound) => sound.type === "lofi"
+            );
+            const currentLofiIndex = lofiSounds.findIndex(
+              (sound) => sound.index === index
+            );
+
             let nextLofiSound;
             if (currentLofiIndex < lofiSounds.length - 1) {
               nextLofiSound = lofiSounds[currentLofiIndex + 1];
             } else {
               nextLofiSound = lofiSounds[0]; // Loop back to first lofi
             }
-            
+
             if (nextLofiSound) {
               playSound(
                 nextLofiSound.url,
@@ -394,7 +398,7 @@ function Home({ currentURL, setCurrentURL }) {
               return;
             }
           }
-          
+
           // Default behavior for non-lofi tracks
           if (index < soundscapes.length - 1) {
             playSound(
@@ -417,20 +421,24 @@ function Home({ currentURL, setCurrentURL }) {
         navigator.mediaSession.setActionHandler("previoustrack", () => {
           const index = parseInt(audio.getAttribute("index"));
           const currentSound = soundscapes[index];
-          
+
           // Check if current track is lofi
           if (currentSound && currentSound.type === "lofi") {
             // If lofi, find the previous lofi track
-            const lofiSounds = soundscapes.filter(sound => sound.type === "lofi");
-            const currentLofiIndex = lofiSounds.findIndex(sound => sound.index === index);
-            
+            const lofiSounds = soundscapes.filter(
+              (sound) => sound.type === "lofi"
+            );
+            const currentLofiIndex = lofiSounds.findIndex(
+              (sound) => sound.index === index
+            );
+
             let prevLofiSound;
             if (currentLofiIndex > 0) {
               prevLofiSound = lofiSounds[currentLofiIndex - 1];
             } else {
               prevLofiSound = lofiSounds[lofiSounds.length - 1]; // Loop back to last lofi
             }
-            
+
             if (prevLofiSound) {
               playSound(
                 prevLofiSound.url,
@@ -442,7 +450,7 @@ function Home({ currentURL, setCurrentURL }) {
               return;
             }
           }
-          
+
           // Default behavior for non-lofi tracks
           if (index > 0) {
             playSound(
@@ -904,6 +912,7 @@ function Home({ currentURL, setCurrentURL }) {
         <CreditsMenu />
 
         {soundscapes
+          .sort((a, b) => a.name.localeCompare(b.name))
           .filter((sound) => {
             if (
               new URL(window.location.href).hostname.startsWith("reversed.")
