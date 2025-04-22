@@ -1,3 +1,4 @@
+import { sentryVitePlugin } from "@sentry/vite-plugin";
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "tailwindcss";
@@ -31,15 +32,25 @@ export default defineConfig({
         ],
       },
     }),
+    sentryVitePlugin({
+      org: "noisefill",
+      project: "javascript-react",
+    }),
   ],
+
   css: {
     postcss: {
       plugins: [tailwindcss, autoprefixer, postcssNested],
     },
   },
+
   resolve: {
     alias: {
       "@": "/src",
     },
+  },
+
+  build: {
+    sourcemap: true,
   },
 });

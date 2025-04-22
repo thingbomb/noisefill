@@ -33,6 +33,11 @@ export default function Privacy() {
               soundscapes, which may include usage data for performance and
               security reasons
             </li>
+            <li>
+              We utilize Sentry to track errors occuring inside Noisefill that
+              way we can fix them. Sentry may collect data, but not limited to
+              your IP address, browser and device information
+            </li>
           </ul>
         </p>
         <br />
@@ -61,6 +66,21 @@ export default function Privacy() {
                 href="https://www.cloudflare.com/privacypolicy/"
                 className="text-blue-500"
               >
+                privacy policy
+              </a>{" "}
+              here.
+            </p>
+          </li>
+          <li>
+            <strong>When an Error occurs:</strong>
+            <p className="text-base">
+              Sentry may collect data such as your IP address, browser and
+              device information, and diagnostic information to help us track
+              errors and improve the website. This is done for legitimate
+              interests. Sentry processes data on our behalf and data is subject
+              to their privacy policy, which includes any potential transfers
+              outside the European Economic Area (EEA). You can review Sentry's{" "}
+              <a href="https://sentry.io/privacy/" className="text-blue-500">
                 privacy policy
               </a>{" "}
               here.
@@ -99,6 +119,10 @@ export default function Privacy() {
             legitimate interests pursued by the website operator (e.g., website
             security or performance).
           </li>
+          <li>
+            <strong>Error</strong>: Refers to errors that may occur on our
+            website.
+          </li>
         </ul>
 
         <h2 id="third-party-service-providers" className="text-xl font-bold">
@@ -119,6 +143,15 @@ export default function Privacy() {
             >
               Privacy Policy
             </a>
+          </li>
+          <li>
+            <strong>Sentry</strong>: Sentry is our error tracking service.
+            Sentry processes data on our behalf and data is subject to their
+            privacy policy. You can review Sentry's{" "}
+            <a href="https://sentry.io/privacy/" className="text-blue-500">
+              privacy policy
+            </a>{" "}
+            here.
           </li>
           <li>
             <strong>SimpleAnalytics</strong>: SimpleAnalytics is our
@@ -147,47 +180,43 @@ export default function Privacy() {
         <ul className="list-disc pl-6 space-y-2">
           <li>
             <strong>Right of Access</strong>: The right to request access to
-            your personal data (if any), but since we do not store PII directly,
-            we cannot process such a request. You may need to contact{" "}
-            <strong>Cloudflare</strong> for any data they may have processed
-            regarding your interactions with our website.
+            your personal data. If your request relates to data collected on our
+            behalf by Cloudflare, please contact them. If your request relates
+            to data collected by Sentry, please contact either Sentry or us.
           </li>
           <li>
             <strong>Right to Rectification</strong>: The right to request that
-            any inaccurate or incomplete data be corrected. Since we don’t store
-            PII, we cannot fulfill this request directly. For any corrections to
-            data processed by our third-party providers (such as Cloudflare),
-            please refer to their privacy policies.
+            any inaccurate or incomplete data be corrected. If your request
+            relates to data collected on our behalf by Cloudflare, please
+            contact them. If your request relates to data collected by Sentry,
+            please contact either Sentry or us.
           </li>
           <li>
             <strong>Right to Erasure</strong>: The right to request the deletion
-            of your personal data from our systems. However, we do not store PII
-            ourselves, so we cannot directly delete any data. For data that may
-            be processed by <strong>Cloudflare</strong>, please refer to their
-            privacy policy for instructions on how to exercise your right to
-            erasure.
+            of your personal data from our systems. If your request relates to
+            data collected on our behalf by Cloudflare, please contact them. If
+            your request relates to data collected by Sentry, please contact
+            either Sentry or us.
           </li>
           <li>
             <strong>Right to Restriction of Processing</strong>: You have the
             right to request the restriction of processing of your personal
-            data. We do not process PII directly, so this request would need to
-            be directed to our third-party service providers.
+            data. If your request relates to data collected on our behalf by
+            Cloudflare, please contact them. If your request relates to data
+            collected by Sentry, please contact either Sentry or us.
           </li>
           <li>
             <strong>Right to Data Portability</strong>: You have the right to
             receive your personal data in a structured, commonly used, and
-            machine-readable format. While IP addresses are technically
-            portable, they are linked to your network and not specific to our
-            platform. We don’t store them in a long-term or user-specific way,
-            but you still have the right to request portability of any personal
-            data we collect.
+            machine-readable format. Please direct your request to Cloudflare or
+            Sentry.
           </li>
           <li>
             <strong>Right to Object</strong>: You have the right to object to
-            the processing of your personal data. Since we do not store personal
-            data, this right would primarily apply to our third-party providers,
-            like <strong>Cloudflare</strong>, who may process certain data for
-            security or performance purposes.
+            the processing of your personal data. If your request relates to
+            data collected on our behalf by Cloudflare, please contact them. If
+            your request relates to data collected by Sentry, please contact
+            either Sentry or us.
           </li>
           <li>
             <strong>Right to Complain</strong>: You have the right to complain
@@ -197,11 +226,9 @@ export default function Privacy() {
         </ul>
 
         <p className="text-base">
-          Since we do not store personally identifiable information (PII)
-          ourselves, any requests related to these rights must be directed to
-          the third-party service providers that handle your data, except for
-          the right to complain. For more details, please consult their privacy
-          policies linked below:
+          Steps to exercise your rights might vary by right. Refer to the
+          information above for details on how to exercise your rights. For more
+          details, please consult their privacy policies linked below:
         </p>
         <ul className="list-disc pl-6 space-y-2">
           <li>
@@ -211,6 +238,12 @@ export default function Privacy() {
               className="text-blue-500"
             >
               https://www.cloudflare.com/privacypolicy/
+            </a>
+          </li>
+          <li>
+            <strong>Sentry Privacy Policy</strong>:{" "}
+            <a href="https://sentry.io/privacy/" className="text-blue-500">
+              https://sentry.io/privacy/
             </a>
           </li>
         </ul>
@@ -243,7 +276,7 @@ export default function Privacy() {
         </p>
 
         <p className="text-base font-semibold">Last updated</p>
-        <p className="text-base">April 6, 2025</p>
+        <p className="text-base">April 22, 2025</p>
       </article>
     </div>
   );
