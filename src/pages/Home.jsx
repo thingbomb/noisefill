@@ -668,9 +668,11 @@ function Home({ currentURL, setCurrentURL }) {
       }
     };
 
-    if (!isOnline && cachedSoundscapes.includes(soundscapeId)) {
-      void playFromCache();
-      return;
+    if (cachedSoundscapes.includes(soundscapeId)) {
+      const playedFromCache = await playFromCache();
+      if (playedFromCache) {
+        return;
+      }
     }
 
     audio.addEventListener("error", handleAudioError);
@@ -682,10 +684,8 @@ function Home({ currentURL, setCurrentURL }) {
     setCurrentURL(url);
 
     if (soundscape) {
-      // Set volume directly from the soundscape
       audio.volume = soundscape.volume || 1.0;
 
-      // Save the audio data URL to IndexedDB when online
       if (isOnline) {
         saveAudioToIndexedDB(soundscape.index, url)
           .then(() => {
@@ -709,7 +709,7 @@ function Home({ currentURL, setCurrentURL }) {
     });
   };
 
-  const playPlaylistItem = (playlist, index) => {
+  const playPlaylistItem = async (playlist, index) => {
     if (index >= playlist.items.length) {
       playPlaylistItem(playlist, 0);
       return;
@@ -810,9 +810,11 @@ function Home({ currentURL, setCurrentURL }) {
       }
     };
 
-    if (!isOnline && cachedSoundscapes.includes(soundscapeIndex)) {
-      void playFromCache();
-      return;
+    if (cachedSoundscapes.includes(soundscapeIndex)) {
+      const playedFromCache = await playFromCache();
+      if (playedFromCache) {
+        return;
+      }
     }
 
     audio.addEventListener("error", handleAudioError);
