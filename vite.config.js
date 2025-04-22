@@ -10,6 +10,26 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: "autoUpdate",
+      includeAssets: ["favicon.svg", "maskable.png", "og.png"],
+      devOptions: {
+        enabled: true,
+      },
+      manifest: {
+        name: "Noisefill",
+        description: "Soundscapes and lofi in a neat interface.",
+        start_url: "/",
+        display: "standalone",
+        background_color: "#010101",
+        theme_color: "#010101",
+        display_override: ["window-controls-overlay"],
+        icons: [
+          {
+            src: "maskable.png",
+            sizes: "512x512",
+            type: "image/png",
+          },
+        ],
+      },
     }),
   ],
   css: {
