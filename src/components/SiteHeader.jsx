@@ -13,6 +13,7 @@ const pathmap = {
   "/support": "Support",
   "/settings": "Settings",
   "/credits": "Credits",
+  "/changelog": "Changelog",
 };
 
 export function SiteHeader() {

@@ -50,18 +50,8 @@ import { cn } from "./components/lib/utils";
 import { Shield } from "lucide-react";
 import { Notebook } from "lucide-react";
 import { Github } from "lucide-react";
-
-const pathmap = {
-  "/": "Home",
-  "/white-noise": "White Noise",
-  "/pink-noise": "Pink Noise",
-  "/brown-noise": "Brown Noise",
-  "/podcasts": "Podcasts",
-  "/privacy": "Privacy",
-  "/support": "Support",
-  "/settings": "Settings",
-  "/credits": "Credits",
-};
+import { PencilIcon } from "lucide-react";
+import Changelog from "./pages/Changelog";
 
 function App() {
   const isMobile = useIsMobile();
@@ -573,6 +563,24 @@ function App() {
                     </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
+                <SidebarMenuItem key={"changelog"}>
+                  <SidebarMenuButton
+                    asChild
+                    isActive={pathname === "/changelog"}
+                    className="text-gray-300 hover:text-white"
+                  >
+                    <NavLink
+                      to="/changelog"
+                      onMouseDown={(e) => {
+                        e.preventDefault();
+                        e.target.click();
+                      }}
+                    >
+                      <PencilIcon />
+                      <span>Changelog</span>
+                    </NavLink>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
                 <SidebarMenuItem key={"credits"}>
                   <SidebarMenuButton
                     asChild
@@ -631,6 +639,7 @@ function App() {
               <Route path="/support" element={<Support />} />
               <Route path="/podcasts" element={<Podcasts />} />
               <Route path="/credits" element={<Credits />} />
+              <Route path="/changelog" element={<Changelog />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </div>
