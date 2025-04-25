@@ -27,7 +27,7 @@ export default defineConfig({
             src: "maskable.png",
             sizes: "512x512",
             type: "image/png",
-            purpose: "maskable",
+            purpose: "any",
           },
         ],
       },
@@ -42,6 +42,10 @@ export default defineConfig({
     postcss: {
       plugins: [tailwindcss, autoprefixer, postcssNested],
     },
+  },
+
+  server: {
+    port: 3000,
   },
 
   resolve: {
