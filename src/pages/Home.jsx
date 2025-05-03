@@ -1148,7 +1148,7 @@ function Home({ currentURL, setCurrentURL }) {
                             : ""
                         }`}
                       >
-                        <span>{soundscapes[item.index].emoji}</span>
+                        <span>{soundscapes[item.index]?.emoji}</span>
                         <span>{soundscapes[item.index].name}</span>
                         <span className="text-zinc-400">
                           - {item.duration} minutes
