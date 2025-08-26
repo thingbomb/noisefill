@@ -1,2 +1,2 @@
 # noisefill
-MOVED TO thingbomb/thingbomb in the `apps/noisefill` folder
+MOVED TO noisefill/noisefill
